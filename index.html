@@ -1,0 +1,1216 @@
+<meta charset="utf-8">
+<title>Within The Logs — Uncovering the stories behind the breaches</title>
+<meta name="description" content="A podcast about cybercrime, digital investigation, and the traces hackers leave behind.">
+<link rel="icon" href="art/favicon-32.png" sizes="32x32">
+<link rel="icon" href="art/favicon-512.png" sizes="512x512">
+<link rel="apple-touch-icon" href="art/favicon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Within The Logs">
+<meta property="og:description" content="A podcast about cybercrime, digital investigation, and the traces hackers leave behind.">
+<meta property="og:image" content="art/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Within The Logs">
+<meta name="twitter:description" content="A podcast about cybercrime, digital investigation, and the traces hackers leave behind.">
+<meta name="twitter:image" content="art/og-image.jpg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,700;125,800;125,900&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+/* Layout: one centered 1120px column, three stops only: hero with the show art, the episode list, a short about note. */
+:root {
+  --bg: #000000;
+  --band: #0A0A0A;
+  --line: #262626;
+  --line-strong: #5C5C5C;
+  --fg: #F2F2F2;
+  --fg-soft: #CFCFCF;
+  --muted: #A3A3A3;
+  --accent: #FFFFFF;
+  --accent-ink: #000000;
+  --signal: #BDBDBD;
+  --amber: #45E3C7;
+  --cyan: #45E3C7;
+  --display: Archivo, "IBM Plex Sans", "Helvetica Neue", sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+/* Single black look by choice, to match the live site: no light variant. */
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+}
+a { color: var(--fg); text-decoration: none; }
+a:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+h1, h2, p { margin: 0; }
+h1, h2 {
+  font-family: var(--display);
+  font-stretch: 125%;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 5vw, 48px);
+}
+.band { border-top: 1px solid var(--line); }
+.band > .wrap { padding-block: clamp(48px, 7vw, 80px); }
+.band--tint { background: var(--band); }
+.textlink { display: inline-block; padding-block: 12px; font-size: 15px; text-decoration: underline; text-underline-offset: 4px; }
+
+/* Header */
+.top .wrap {
+  padding-block: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 32px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-family: var(--display);
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.brand__logo { flex: none; width: 42px; height: 42px; object-fit: cover; display: block; border: 1px solid var(--line); background: #000; }
+.nav { display: flex; flex-wrap: wrap; gap: 0 28px; font-size: 15px; }
+.nav a { padding-block: 12px; }
+.nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.search { flex: none; display: flex; }
+.search input {
+  min-height: 40px;
+  width: clamp(140px, 22vw, 220px);
+  max-width: 100%;
+  padding: 0 14px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 14px;
+}
+.search input::placeholder { color: var(--muted); }
+
+/* Hero */
+.hero {
+  padding-block: clamp(40px, 7vw, 88px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px 64px;
+}
+.hero__copy { flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.hero h1 { font-size: clamp(36px, 5.6vw, 72px); font-weight: 900; line-height: 0.98; letter-spacing: -0.025em; text-transform: uppercase; }
+.hero__lede { max-width: 32em; font-size: clamp(17px, 1.6vw, 20px); color: var(--fg-soft); }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 24px;
+  border: 1px solid var(--line-strong);
+  font-weight: 500;
+}
+.btn:hover { border-color: var(--fg); }
+.btn--primary { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.btn--primary:hover { background: var(--fg-soft); border-color: var(--fg-soft); }
+.hero__art {
+  flex: 1 1 300px;
+  min-width: 0;
+  max-width: min(440px, 100%);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* Episodes */
+.h2 { font-size: clamp(26px, 3.2vw, 38px); line-height: 1.05; letter-spacing: -0.01em; }
+.head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; margin-bottom: 20px; }
+.eps { display: flex; flex-direction: column; }
+.ep {
+  border-top: 1px solid var(--line);
+  padding-block: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 22px;
+}
+.ep:last-child { border-bottom: 1px solid var(--line); }
+.ep__art {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.ep__num { flex: none; width: 48px; padding-top: 2px; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+.ep__title { font-size: 20px; font-weight: 600; line-height: 1.25; }
+.ep__meta { flex: none; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.ep__go { flex: none; font-size: 15px; font-weight: 500; }
+.ep:hover .ep__title, .ep:hover .ep__go { text-decoration: underline; text-underline-offset: 4px; }
+
+/* About */
+.about { max-width: 46em; display: flex; flex-direction: column; gap: 16px; }
+.about p { color: var(--fg-soft); }
+.mission { margin-top: 20px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px; }
+.term { border: 1px solid var(--line-strong); background: var(--bg); }
+.term__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 9px 14px; border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.term__path::before { content: "> "; color: var(--signal); }
+.term__replay { background: none; border: 1px solid var(--line-strong); color: var(--fg-soft); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; padding: 5px 10px; min-height: 32px; }
+.term__replay:hover { border-color: var(--fg); color: var(--fg); }
+.term__body { padding: 18px clamp(14px, 3vw, 22px); display: flex; flex-direction: column; gap: 12px; }
+.term__body p { margin: 0; color: var(--fg-soft); }
+.term__body p.typing::after { content: "▋"; color: var(--signal); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  background: var(--panel, #111); border: 1px solid var(--line-strong); color: var(--fg-soft);
+  font-family: var(--mono); font-size: 13px; padding: 8px 14px; min-height: 40px; border-radius: 0;
+}
+.pill:hover { border-color: var(--fg); color: var(--fg); }
+.pill[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.pdef { min-height: 2.6em; color: var(--fg-soft); font-size: 14px; border-left: 2px solid var(--line-strong); padding-left: 14px; }
+
+/* Boot intro overlay */
+.boot {
+  position: fixed; inset: 0; z-index: 9999; background: var(--bg);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(20px, 6vw, 80px); gap: 2px;
+  font-family: var(--mono); font-size: clamp(12px, 2.6vw, 15px); color: var(--fg-soft);
+  transition: opacity 0.5s ease;
+}
+.boot.done { opacity: 0; pointer-events: none; }
+.boot__line { white-space: pre-wrap; }
+.boot__line .ok { color: var(--signal); }
+.boot__cursor { color: var(--signal); animation: blink 1s steps(1) infinite; }
+.boot__skip {
+  position: absolute; top: calc(env(safe-area-inset-top, 0px) + 16px); right: 16px;
+  background: none; border: 1px solid var(--line-strong); color: var(--muted);
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; padding: 8px 12px; min-height: 40px;
+}
+.boot__skip:hover { border-color: var(--fg); color: var(--fg); }
+
+/* Console */
+.con-wrap { }
+.console { max-height: 320px; overflow-y: auto; font-family: var(--mono); font-size: 14px; }
+.con-line { margin: 0 0 2px; white-space: pre-wrap; color: var(--fg-soft); }
+.con-line.cmd { color: var(--fg); }
+.con-line.cmd::before { content: "> "; color: var(--signal); }
+.con-line.sys { color: var(--signal); }
+.con-form { display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--line); padding: 12px clamp(14px, 3vw, 22px); }
+.con-prompt { font-family: var(--mono); color: var(--signal); }
+.con-input {
+  flex: 1 1 auto; min-width: 0; background: none; border: none; outline: none;
+  color: var(--fg); font-family: var(--mono); font-size: 14px; padding: 6px 0;
+}
+.con-input::placeholder { color: var(--muted); }
+
+/* CRT scanline mode */
+.crt { position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
+.crt.on { opacity: 1; }
+.crt::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.28) 3px, rgba(0,0,0,0) 4px);
+}
+.crt::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%);
+}
+@media (prefers-reduced-motion: no-preference) { .crt.on::before { animation: scan 7s linear infinite; } }
+@keyframes scan { from { background-position: 0 0; } to { background-position: 0 100vh; } }
+.crt-toggle { background: none; border: 1px solid var(--line-strong); color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; padding: 7px 11px; min-height: 36px; }
+.crt-toggle:hover { border-color: var(--fg); color: var(--fg); }
+.crt-toggle[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); }
+
+/* Breach easter egg */
+.breach { position: fixed; inset: 0; z-index: 9998; background: #000; display: none; align-items: center; justify-content: center; padding: 24px; }
+.breach.on { display: flex; }
+.breach__txt {
+  font-family: var(--display); font-stretch: 125%; font-weight: 800; text-transform: uppercase;
+  font-size: clamp(32px, 9vw, 110px); letter-spacing: 0.02em; text-align: center; color: #fff; line-height: 0.95;
+}
+.glitch-shake { animation: shake 0.28s steps(2) infinite; }
+@keyframes shake { 0%{transform:translate(0,0)} 25%{transform:translate(-3px,2px)} 50%{transform:translate(3px,-2px)} 75%{transform:translate(-2px,-2px)} 100%{transform:translate(2px,2px)} }
+
+/* Live ticker */
+.ticker { border-bottom: 1px solid var(--line); background: var(--band); color: var(--fg); display: flex; align-items: center; gap: 14px; padding: 9px clamp(16px, 5vw, 48px); font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; overflow: hidden; text-decoration: none; min-height: 40px; }
+.ticker:hover { background: #12110f; }
+.ticker:hover .ticker__go { color: var(--fg); }
+.ticker__live { flex: none; color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
+.ticker__live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+@media (prefers-reduced-motion: no-preference) { .ticker__live::before { animation: blink 1.4s steps(1) infinite; } }
+.ticker__text { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--fg-soft); transition: opacity 0.25s ease; }
+.ticker__go { flex: none; color: var(--muted); }
+
+/* Latest-episode player */
+.player { display: flex; align-items: center; gap: 14px; margin-top: 4px; padding: 12px 14px; border: 1px solid var(--line-strong); max-width: 440px; }
+.player__btn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent); color: var(--accent-ink); font-size: 15px; display: inline-flex; align-items: center; justify-content: center; }
+.player__wave { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 2px; height: 36px; }
+.player__wave span { flex: 1 1 auto; background: var(--line-strong); min-height: 3px; transition: background-color 0.1s linear; }
+.player__wave span.played { background: var(--accent); }
+.player__time { flex: none; font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Case file modal */
+.case { position: fixed; inset: 0; z-index: 9500; background: rgba(0,0,0,0.78); display: none; align-items: center; justify-content: center; padding: clamp(16px, 5vw, 48px); }
+.case.on { display: flex; }
+.case__box { position: relative; width: min(760px, 100%); max-height: 90vh; overflow: auto; background: var(--panel, #111); border: 1px solid var(--line-strong); }
+.case__close { position: absolute; top: 10px; right: 10px; z-index: 2; background: none; border: 1px solid var(--line-strong); color: var(--fg-soft); width: 40px; height: 40px; font-size: 15px; }
+.case__close:hover { border-color: var(--fg); color: var(--fg); }
+.case__grid { display: flex; flex-wrap: wrap; }
+.case__art { flex: 1 1 240px; min-width: 0; max-width: 300px; aspect-ratio: 1/1; object-fit: cover; display: block; border-right: 1px solid var(--line); }
+.case__body { flex: 999 1 300px; min-width: 0; padding: clamp(20px, 4vw, 32px); display: flex; flex-direction: column; gap: 12px; position: relative; }
+.case__title { margin: 0; font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: clamp(22px, 3vw, 32px); line-height: 1.05; }
+.case__meta { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+.case__brief { color: var(--fg-soft); }
+.case__redact { background: var(--fg); color: transparent; cursor: pointer; border-radius: 1px; user-select: none; }
+.case__redact.revealed { background: none; color: var(--fg-soft); }
+.case__stamp { align-self: flex-start; margin-top: 4px; border: 2px solid var(--accent); color: var(--accent); font-family: var(--mono); font-weight: 700; letter-spacing: 0.14em; padding: 4px 12px; transform: rotate(-5deg); opacity: 0.85; }
+
+.snd-toggle { background: none; border: 1px solid var(--line-strong); color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; padding: 7px 11px; min-height: 36px; }
+.snd-toggle:hover { border-color: var(--fg); color: var(--fg); }
+.snd-toggle[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); }
+
+/* --- Visual system: grain, amber accent, log dividers --- */
+.grain {
+  position: fixed; inset: 0; z-index: 8000; pointer-events: none; opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 170px 170px;
+}
+.band[data-log] > .wrap { position: relative; }
+.band[data-log] > .wrap::before {
+  content: attr(data-log); display: block;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; color: var(--amber);
+  opacity: 0.92; margin-bottom: 22px;
+}
+a:hover { color: var(--amber); }
+.ticker__live { color: var(--amber); }
+.ticker__live::before { background: var(--amber); }
+.term__path::before { color: var(--amber); }
+.con-prompt { color: var(--amber); }
+.con-line.cmd::before { color: var(--amber); }
+
+/* Second accent: cyan = machine/system signal (amber stays human-facing) */
+.boot__line .ok { color: var(--cyan); }
+.boot__cursor { color: var(--cyan); }
+.con-line.sys { color: var(--cyan); }
+#uptime { color: var(--cyan); }
+.crt-toggle[aria-pressed="true"] { border-color: var(--cyan); color: var(--cyan); }
+.snd-toggle[aria-pressed="true"] { border-color: var(--cyan); color: var(--cyan); }
+
+/* Hero art vignette so the cover pops off the black */
+.hero__frame .vig { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.58) 100%); }
+
+/* Oversized section index numbers (editorial, hang left on wide screens) */
+.band[data-index] > .wrap { position: relative; }
+.idx { display: block; font-family: var(--display); font-stretch: 125%; font-weight: 900;
+  font-size: clamp(40px, 7vw, 76px); line-height: 0.8; letter-spacing: -0.03em;
+  color: transparent; -webkit-text-stroke: 1.5px var(--line-strong); margin: -6px 0 14px; user-select: none; }
+
+/* Episode row: thumb · number · [title + brief + waveform] · chip · action */
+.ep__thumb { position: relative; align-self: flex-start; }
+.ep__reticle { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
+.ep__reticle::before, .ep__reticle::after { content: ""; position: absolute; width: 14px; height: 14px; }
+.ep__reticle::before { top: 4px; left: 4px; border-top: 2px solid var(--amber); border-left: 2px solid var(--amber); }
+.ep__reticle::after { bottom: 4px; right: 4px; border-bottom: 2px solid var(--amber); border-right: 2px solid var(--amber); }
+.ep:hover .ep__reticle, .ep:focus-within .ep__reticle { opacity: 1; }
+.ep__main { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+.ep__brief { color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 60ch; }
+.ep__wave { display: flex; align-items: flex-end; gap: 2px; height: 14px; opacity: 0.45; transition: opacity 0.3s ease; }
+.ep:hover .ep__wave, .ep:focus-within .ep__wave { opacity: 0.85; }
+.ep__wave i { flex: 1 1 auto; min-width: 1px; height: 100%; background: var(--line-strong); transform: scaleY(0.4); transform-origin: bottom; }
+.ep:hover .ep__wave i, .ep:focus-within .ep__wave i { background: var(--signal); }
+@media (prefers-reduced-motion: no-preference) {
+  .ep:hover .ep__wave i, .ep:focus-within .ep__wave i { animation: eq 1.1s ease-in-out infinite; }
+}
+@keyframes eq { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+.ep__chip { flex: none; align-self: flex-start; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+  padding: 5px 9px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; transition: border-color 0.25s ease, color 0.25s ease; }
+.ep:hover .ep__chip, .ep:focus-within .ep__chip { border-color: var(--amber); color: var(--amber); }
+.ep__go { align-self: flex-start; }
+
+/* Background watermark behind the mission */
+#about { position: relative; overflow: hidden; }
+#about::after {
+  content: ">_"; position: absolute; right: 1%; bottom: -16%;
+  font-family: var(--display); font-stretch: 125%; font-weight: 800;
+  font-size: min(44vw, 560px); line-height: 0.8; color: var(--fg);
+  opacity: 0.035; pointer-events: none; z-index: 0; user-select: none;
+}
+#about > .wrap { position: relative; z-index: 1; }
+
+/* Margin metadata rails (wide screens only) */
+.rail { position: fixed; top: 0; bottom: 0; width: 24px; z-index: 7000; pointer-events: none;
+  display: none; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.34em; color: #3a3a3a; text-transform: uppercase; }
+.rail span { writing-mode: vertical-rl; white-space: nowrap; }
+.rail--l { left: 0; } .rail--l span { transform: rotate(180deg); }
+.rail--r { right: 0; }
+@media (min-width: 1180px) { .rail { display: flex; } }
+
+/* Episode cover hover: zoom + light sweep */
+.ep__thumb { flex: none; width: 76px; height: 76px; position: relative; overflow: hidden; border: 1px solid var(--line); background: #000; display: block; }
+.ep__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; border: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .ep__thumb img { transition: transform 0.4s ease, filter 0.4s ease; }
+  .ep:hover .ep__thumb img { transform: scale(1.09); filter: contrast(1.12) brightness(1.05); }
+  .ep__thumb::after { content: ""; position: absolute; top: 0; left: -70%; width: 45%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.3), transparent); transform: skewX(-18deg); opacity: 0; }
+  .ep:hover .ep__thumb::after { animation: sweep 0.6s ease; }
+}
+@keyframes sweep { 0% { left: -70%; opacity: 0; } 25% { opacity: 1; } 100% { left: 130%; opacity: 0; } }
+
+/* Scroll signal meter */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 7500; background: transparent; pointer-events: none; }
+.progress__fill { height: 100%; width: 0; background: var(--amber); box-shadow: 0 0 8px var(--amber); transition: width 0.08s linear; }
+
+/* Hero art: case-file corner reticle + hover sweep */
+.hero__frame { position: relative; display: block; flex: 1 1 300px; min-width: 0; max-width: min(440px, 100%); aspect-ratio: 1 / 1; overflow: hidden; }
+.hero__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero__frame::before, .hero__frame::after { content: ""; position: absolute; width: 26px; height: 26px; z-index: 2; pointer-events: none; }
+.hero__frame::before { top: 8px; left: 8px; border-top: 2px solid var(--amber); border-left: 2px solid var(--amber); }
+.hero__frame::after { bottom: 8px; right: 8px; border-bottom: 2px solid var(--amber); border-right: 2px solid var(--amber); }
+@media (prefers-reduced-motion: no-preference) {
+  .hero__frame img { transition: transform 0.5s ease, filter 0.5s ease; }
+  .hero__frame:hover img { transform: scale(1.05); filter: contrast(1.08); }
+  .hero__frame .flare { content: ""; position: absolute; top: 0; left: -70%; width: 45%; height: 100%; z-index: 1;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.22), transparent); transform: skewX(-18deg); opacity: 0; pointer-events: none; }
+  .hero__frame:hover .flare { animation: sweep 0.7s ease; }
+}
+
+/* ===== FX TEST LAYER ===== */
+html.anim .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+html.anim .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { html.anim .reveal { opacity: 1 !important; transform: none !important; } }
+
+/* count-up stats band */
+.stats > .wrap { display: flex; flex-wrap: wrap; gap: 20px 52px; }
+.statblk { display: flex; flex-direction: column; gap: 6px; min-width: 110px; }
+.statblk b { font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: clamp(34px, 7vw, 60px); line-height: 0.9; font-variant-numeric: tabular-nums; }
+.statblk span { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+/* radar sweep + ambient behind hero */
+.hero { position: relative; overflow: clip; }
+.hero__copy { position: relative; z-index: 1; }
+.hero__frame { z-index: 1; }
+.radar { position: absolute; top: -12%; right: -6%; width: min(58vw, 540px); aspect-ratio: 1; z-index: 0; pointer-events: none; opacity: 0.13;
+  background: conic-gradient(from 0deg, transparent 0deg, var(--amber) 16deg, transparent 42deg); border-radius: 50%;
+  -webkit-mask: radial-gradient(circle, #000 0 58%, transparent 60%); mask: radial-gradient(circle, #000 0 58%, transparent 60%); }
+.ambient { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; }
+@media (prefers-reduced-motion: no-preference) { .radar { animation: spin 7s linear infinite; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* wordmark "screen defocus" + mirror break on hover — Black Mirror title look */
+.wordmark { position: relative; display: inline-block; }
+.wordmark__t { display: inline-block; transition: filter 0.2s ease, text-shadow 0.2s ease, color 0.2s ease; will-change: filter; }
+.brand:hover .wordmark__t {
+  color: #fdfdfd;
+  filter: blur(0.7px);
+  text-shadow:
+    -1.4px 0 1px rgba(60,255,180,0.7),
+    1.4px 0 1px rgba(255,70,150,0.7),
+    0 0 7px rgba(255,255,255,0.5),
+    0 0 16px rgba(255,255,255,0.3);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .brand:hover .wordmark__t { animation: bmdefocus 1.3s steps(12) infinite; }
+}
+@keyframes bmdefocus {
+  0%   { filter: blur(0.7px) brightness(1);    transform: translateX(0); }
+  25%  { filter: blur(1.2px) brightness(1.15); transform: translateX(0.3px); }
+  50%  { filter: blur(0.55px) brightness(0.96);transform: translateX(-0.3px); }
+  75%  { filter: blur(0.95px) brightness(1.08);transform: translateX(0.2px); }
+  100% { filter: blur(0.8px) brightness(1.04); transform: translateX(0); }
+}
+
+/* reticle draw-in */
+html.anim .hero__frame::before, html.anim .hero__frame::after { width: 0; height: 0; transition: width 0.5s ease 0.15s, height 0.5s ease 0.15s; }
+html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { width: 26px; height: 26px; }
+
+/* page-transition wipe */
+.wipe { position: fixed; inset: 0; z-index: 9600; background: #000; transform: scaleY(0); transform-origin: bottom; pointer-events: none; }
+.wipe.on { transform: scaleY(1); transform-origin: top; transition: transform 0.45s cubic-bezier(.7,0,.3,1); }
+
+/* magnetic buttons + cursor trail */
+@media (prefers-reduced-motion: no-preference) { .btn { transition: transform 0.18s ease, border-color 0.15s ease, background-color 0.15s ease; } }
+.trail { position: fixed; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); pointer-events: none; z-index: 7200; opacity: 0.5; mix-blend-mode: screen; will-change: transform, opacity; }
+
+/* marquee ticker */
+.ticker__text.marquee { display: inline-block; white-space: nowrap; will-change: transform; animation: marq 26s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .ticker__text.marquee { animation: none; } }
+@keyframes marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* --- Polish: 3D tilt on episode covers --- */
+.ep__thumb { transition: transform 0.18s ease; will-change: transform; }
+
+/* Footer */
+.foot .wrap {
+  padding-block: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 32px;
+}
+.socials { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.socials a { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--fg); color: var(--accent-ink); transition: transform 0.18s ease, background-color 0.18s ease; }
+.socials a:hover { background: var(--cyan); transform: translateY(-2px); }
+.socials svg { width: 19px; height: 19px; fill: currentColor; display: block; }
+.foot__legal { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+</style>
+
+<div class="boot" id="boot" role="status" aria-label="Loading">
+  <div id="boot-log"></div>
+  <button class="boot__skip" id="boot-skip" type="button">skip ▸</button>
+</div>
+<div class="crt" id="crt" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="rail rail--l" aria-hidden="true"><span>Within The Logs // Uncovering the stories behind the breaches</span></div>
+<div class="rail rail--r" aria-hidden="true"><span>/var/log/wtl · session active · 2026</span></div>
+<div class="progress" aria-hidden="true"><div class="progress__fill" id="progress-fill"></div></div>
+<div class="wipe" id="wipe" aria-hidden="true"></div>
+<div class="breach" id="breach" aria-hidden="true"><div class="breach__txt" id="breach-txt">BREACH DETECTED</div></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img class="brand__logo" src="art/logo-cameras.jpg" alt="">
+      <span class="wordmark"><span class="wordmark__t">Within The Logs</span></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#episodes">Episodes</a>
+      <a href="#top">News</a>
+      <a href="https://shop.withinthelogs.com">Shop</a>
+      <a href="#about">About</a>
+      <a href="attack-map.html">Threat Map</a>
+      <a href="#console">Console</a>
+    </nav>
+    <form class="search" role="search" onsubmit="return false">
+      <input type="search" aria-label="Search episodes" placeholder="Search">
+    </form>
+  </div>
+</header>
+
+<a class="ticker" href="#episodes" id="ticker" aria-label="Latest episodes">
+  <span class="ticker__live">LATEST</span>
+  <span class="ticker__text" id="ticker-text">Loading episodes…</span>
+  <span class="ticker__go">Listen ▸</span>
+</a>
+
+<main id="top">
+  <div class="wrap">
+    <section class="hero">
+      <span class="radar" aria-hidden="true"></span>
+      <canvas class="ambient" id="ambient" aria-hidden="true"></canvas>
+      <div class="hero__copy">
+        <h1>Uncovering the stories behind the breaches.</h1>
+        <p class="hero__lede">A podcast about cybercrime, digital investigation, and the traces hackers leave behind.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#episodes">
+            <svg aria-hidden="true" width="14" height="16" viewBox="0 0 14 16"><path d="M1 1.5v13l12-6.5z" fill="currentColor"></path></svg>
+            Listen to the latest episode
+          </a>
+          <a class="btn" href="https://youtube.com/@withinthelogspodcast">Watch on YouTube</a>
+        </div>
+        <div class="player" id="player" aria-label="Latest episode player">
+          <audio id="player-audio" src="art/latest-episode.mp3" preload="metadata"></audio>
+          <button class="player__btn" id="player-btn" type="button" aria-label="Play latest episode">▶</button>
+          <div class="player__wave" id="player-wave"></div>
+          <div class="player__time" id="player-time">00:00</div>
+        </div>
+      </div>
+      <span class="hero__frame">
+        <span class="flare" aria-hidden="true"></span>
+        <span class="vig" aria-hidden="true"></span>
+        <img class="hero__art" src="art/logo-cameras.jpg" width="1200" height="1200" alt="Within The Logs cover: a cluster of surveillance cameras on a pole in high-contrast black and white, overlaid with system log text">
+      </span>
+    </section>
+  </div>
+
+  <section class="band stats" data-index="01" data-log="// SIGNALS — BY THE NUMBERS">
+    <div class="wrap">
+      <span class="idx" aria-hidden="true">01</span>
+      <div class="statblk"><b data-count="3">0</b><span>Episodes</span></div>
+      <div class="statblk"><b data-count="12">0</b><span>Breaches examined</span></div>
+      <div class="statblk"><b data-count="50" data-suffix="+">0</b><span>Sources cited</span></div>
+      <div class="statblk"><b data-count="18">0</b><span>Countries in the stories</span></div>
+    </div>
+  </section>
+
+  <section class="band" id="episodes" data-index="02" data-log="// EPISODES — INDEX">
+    <div class="wrap">
+      <span class="idx" aria-hidden="true">02</span>
+      <div class="head">
+        <h2 class="h2">Episodes</h2>
+        <a class="textlink" href="#episodes">All episodes</a>
+      </div>
+      <div class="eps">
+        <a class="ep" href="#episodes" data-cover="art/ep-leopard.jpg" data-tag="CASE FILE // EP 003" data-brief="A newly disclosed Windows flaw opens a door nobody knew was there. We trace who walked through it first, what they were after, and why the patch came three weeks late.">
+          <span class="ep__thumb"><img class="ep__art" src="art/ep-leopard.jpg" width="1000" height="1000" alt="Leopard episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
+          <span class="ep__num">EP 3</span>
+          <span class="ep__main">
+            <span class="ep__title">What is next for Windows</span>
+            <span class="ep__brief">A zero-day nobody knew was open — and who walked through the door first.</span>
+            <span class="ep__wave" aria-hidden="true"></span>
+          </span>
+          <span class="ep__chip">CASE FILE</span>
+          <span class="ep__go">Open file</span>
+        </a>
+        <a class="ep" href="#episodes" data-cover="art/ep-spider.jpg" data-tag="CASE FILE // EP 002" data-brief="The web got faster, louder, and far easier to hide inside. A look at the new era of the digital world — and the predators waiting in the threads that connect all of it.">
+          <span class="ep__thumb"><img class="ep__art" src="art/ep-spider.jpg" width="1000" height="1000" alt="Spider episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
+          <span class="ep__num">EP 2</span>
+          <span class="ep__main">
+            <span class="ep__title">The new era of the digital world</span>
+            <span class="ep__brief">The new internet — faster, louder, easier to hide inside — and the predators waiting in the threads.</span>
+            <span class="ep__wave" aria-hidden="true"></span>
+          </span>
+          <span class="ep__chip">CASE FILE</span>
+          <span class="ep__go">Open file</span>
+        </a>
+        <a class="ep" href="#episodes" data-cover="art/ep-owl.jpg" data-tag="CASE FILE // EP 001" data-brief="Where it begins. What this show is, who's behind it, and the one rule we never break: every breach tells a story. Welcome to Within The Logs.">
+          <span class="ep__thumb"><img class="ep__art" src="art/ep-owl.jpg" width="1000" height="1000" alt="Owl episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
+          <span class="ep__num">EP 1</span>
+          <span class="ep__main">
+            <span class="ep__title">Welcome to Within The Logs</span>
+            <span class="ep__brief">Where it begins — what this show is, who's behind it, and the one rule we never break.</span>
+            <span class="ep__wave" aria-hidden="true"></span>
+          </span>
+          <span class="ep__chip">CASE FILE</span>
+          <span class="ep__go">Listen</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--tint" id="about" data-index="03" data-log="// ABOUT — MISSION">
+    <div class="wrap">
+      <span class="idx" aria-hidden="true">03</span>
+      <div class="about">
+        <h2 class="h2">Every breach tells a story. Every log holds a clue.</h2>
+        <p>Within The Logs investigates the hidden side of the internet: true stories of cybercrime, digital investigation, and the lingering traces left behind by hackers, insiders, and shadow operations.</p>
+        <div class="mission">
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__path">mission.log</span>
+            </div>
+            <div class="term__body" id="mission-body">
+              <p data-line>Within The Logs produces audio stories specifically intended to investigate, preserve, and explain the world of cybercrime, digital investigation, and the people behind the breaches, in order to educate and entertain both technical and non-technical audiences.</p>
+              <p data-line>We adhere to journalistic standards through rigorous fact-checking and the ethical sourcing of information. We adopt the principles of truthfulness, accuracy, objectivity, impartiality, fairness, and public accountability.</p>
+              <p data-line>The total service should be trustworthy, enhance intellectual development, expand knowledge, deepen aural enjoyment, increase awareness of what it means to live in a highly connected society, and result in a service to listeners that makes them more responsive, better-informed citizens of their digital lives.</p>
+            </div>
+          </div>
+          <div class="eyebrow" style="color: var(--muted); margin-top: 8px">The principles we hold — tap one</div>
+          <div class="pills" role="group" aria-label="Editorial principles">
+            <button class="pill" type="button" data-def="We report what we can verify — and say so plainly when we can't.">Truthfulness</button>
+            <button class="pill" type="button" data-def="Every detail is checked against primary sources before it airs.">Accuracy</button>
+            <button class="pill" type="button" data-def="We follow the evidence, not a side.">Objectivity</button>
+            <button class="pill" type="button" data-def="Hackers, victims, investigators — each gets a fair hearing.">Impartiality</button>
+            <button class="pill" type="button" data-def="Anyone named gets a chance to respond, and we air it.">Fairness</button>
+            <button class="pill" type="button" data-def="When we get it wrong, we correct it in the open.">Public accountability</button>
+          </div>
+          <p class="pdef mono" id="pdef" aria-live="polite">Select a principle to see what it means to the show.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="band" id="console" data-index="04" data-log="// CONSOLE — SHELL">
+  <div class="wrap">
+    <span class="idx" aria-hidden="true">04</span>
+    <div class="head">
+      <h2 class="h2">Console</h2>
+      <span class="textlink" style="cursor: default; text-decoration: none; color: var(--muted)">try: help</span>
+    </div>
+    <div class="term">
+      <div class="term__bar"><span class="term__path">wtl@shell</span></div>
+      <div class="console" id="con-out"></div>
+      <form class="con-form" id="con-form">
+        <span class="con-prompt" aria-hidden="true">&gt;</span>
+        <input id="con-input" class="con-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Console input" placeholder="type a command, e.g. help">
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="band foot">
+  <div class="wrap">
+    <nav class="socials" aria-label="Social">
+      <a href="https://youtube.com/@withinthelogspodcast" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.376.505A3.016 3.016 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136C4.495 20.455 12 20.455 12 20.455s7.505 0 9.376-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+      <a href="https://x.com/withinthelogs" aria-label="X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://www.instagram.com/withinthelogspodcast" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+      <a href="https://www.tiktok.com/@withinthelogs" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+      <a href="https://www.reddit.com/r/WithintheLogs/" aria-label="Reddit" title="Reddit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 11.779c0-1.459-1.192-2.645-2.657-2.645-.715 0-1.363.286-1.84.746-1.81-1.191-4.259-1.948-6.971-2.046l1.483-4.669 4.016.941-.006.058c0 1.193.975 2.163 2.174 2.163 1.198 0 2.172-.97 2.172-2.163s-.975-2.164-2.172-2.164c-.92 0-1.704.574-2.021 1.379l-4.329-1.015a.448.448 0 0 0-.44.249l-1.654 5.207c-2.759.082-5.251.841-7.085 2.05-.477-.46-1.124-.746-1.84-.746C1.192 9.134 0 10.32 0 11.779c0 1.077.65 2.001 1.58 2.404-.041.267-.063.537-.063.811 0 4.105 4.773 7.444 10.65 7.444 5.877 0 10.65-3.339 10.65-7.444 0-.274-.021-.543-.062-.81.927-.404 1.577-1.328 1.577-2.405zm-18.244 2.03c0-1.193.975-2.164 2.172-2.164 1.198 0 2.172.97 2.172 2.163s-.974 2.163-2.172 2.163c-1.197.001-2.172-.97-2.172-2.162zm9.629 4.822c-1.054 1.049-3.063 1.132-3.651 1.132-.588 0-2.598-.083-3.651-1.132a.401.401 0 0 1 0-.568.405.405 0 0 1 .568 0c.666.662 2.082.898 3.083.898 1.001 0 2.418-.236 3.083-.898a.405.405 0 0 1 .568 0 .401.401 0 0 1 0 .568zm-.391-2.659c-1.197 0-2.172-.97-2.172-2.163s.975-2.164 2.172-2.164c1.198 0 2.172.97 2.172 2.164 0 1.192-.974 2.163-2.172 2.163z"/></svg></a>
+    </nav>
+    <div class="foot__legal">
+      © 2026 Within The Logs · <span id="uptime">SESSION UPTIME 00:00:00</span>
+      · <button class="crt-toggle" id="crt-toggle" type="button" aria-pressed="false">CRT mode</button>
+      · <button class="snd-toggle" id="snd-toggle" type="button" aria-pressed="false">Sound off</button>
+    </div>
+  </div>
+</footer>
+
+<div class="case" id="case" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Episode case file">
+  <div class="case__box">
+    <button class="case__close" id="case-close" type="button" aria-label="Close case file">✕</button>
+    <div class="case__grid">
+      <img class="case__art" id="case-art" src="" alt="">
+      <div class="case__body">
+        <div class="eyebrow" id="case-tag" style="color: var(--signal)">CASE FILE</div>
+        <h3 class="case__title" id="case-title"></h3>
+        <div class="case__meta" id="case-meta"></div>
+        <p class="case__brief" id="case-brief"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Principle chips: reveal the definition, single-select
+  var pills = Array.prototype.slice.call(document.querySelectorAll('.pill'));
+  var pdef = document.getElementById('pdef');
+  pills.forEach(function (p) {
+    p.setAttribute('aria-pressed', 'false');
+    p.addEventListener('click', function () {
+      var on = p.getAttribute('aria-pressed') === 'true';
+      pills.forEach(function (q) { q.setAttribute('aria-pressed', 'false'); });
+      if (on) { pdef.textContent = 'Select a principle to see what it means to the show.'; return; }
+      p.setAttribute('aria-pressed', 'true');
+      pdef.textContent = p.getAttribute('data-def');
+    });
+  });
+
+  // mission.log: types the mission out on first view, with a replay button
+  var body = document.getElementById('mission-body');
+  var replay = document.getElementById('mission-replay');
+  if (!body) return;
+  var lines = Array.prototype.slice.call(body.querySelectorAll('[data-line]'));
+  var full = lines.map(function (el) { return el.textContent; });
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timer = null;
+
+  function show() { lines.forEach(function (el, i) { el.textContent = full[i]; el.classList.remove('typing'); }); }
+
+  function type() {
+    if (timer) { clearInterval(timer); timer = null; }
+    lines.forEach(function (el) { el.textContent = ''; el.classList.remove('typing'); });
+    var li = 0, ci = 0;
+    lines[0].classList.add('typing');
+    timer = setInterval(function () {
+      var el = lines[li], s = full[li];
+      // type a few chars per tick so it moves briskly
+      ci = Math.min(ci + 3, s.length);
+      el.textContent = s.slice(0, ci);
+      if (ci >= s.length) {
+        el.classList.remove('typing');
+        li++; ci = 0;
+        if (li >= lines.length) { clearInterval(timer); timer = null; return; }
+        lines[li].classList.add('typing');
+      }
+    }, 16);
+  }
+
+  show(); // mission text is shown in full, statically — no typewriter animation
+  if (replay) replay.addEventListener('click', type);
+
+  // ---------- Boot intro ----------
+  (function boot() {
+    var el = document.getElementById('boot');
+    if (!el) return;
+    var log = document.getElementById('boot-log');
+    var skip = document.getElementById('boot-skip');
+    function finish() {
+      el.classList.add('done');
+      setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 600);
+    }
+    if (reduce) { el.classList.add('done'); if (el.parentNode) el.parentNode.removeChild(el); return; }
+    if (skip) skip.addEventListener('click', finish);
+
+    var seq = [
+      '> WITHIN THE LOGS',
+      '> SYSTEM LOG INITIALIZATION',
+      'BOOT SEQUENCE INITIATED...',
+      'CHECKING SYSTEM INTEGRITY...   {OK}',
+      'MOUNTING /episodes ...   {OK}',
+      'DECRYPTING ARCHIVE...   {OK}',
+      'ESTABLISHING UPLINK...   {CONNECTED}',
+      'WELCOME, LISTENER.'
+    ];
+    var i = 0;
+    function next() {
+      if (i >= seq.length) { setTimeout(finish, 450); return; }
+      var raw = seq[i++];
+      var line = document.createElement('div');
+      line.className = 'boot__line';
+      var parts = raw.split(/(\{[^}]+\})/);
+      parts.forEach(function (p) {
+        if (/^\{[^}]+\}$/.test(p)) {
+          var s = document.createElement('span'); s.className = 'ok'; s.textContent = p.slice(1, -1);
+          line.appendChild(s);
+        } else if (p) {
+          line.appendChild(document.createTextNode(p));
+        }
+      });
+      log.appendChild(line);
+      setTimeout(next, 230 + Math.random() * 180);
+    }
+    next();
+  })();
+
+  // ---------- Decrypt / glitch titles ----------
+  (function glitch() {
+    if (reduce) return;
+    var GLYPHS = '!<>-_\\/[]{}=+*^?#01';
+    function scramble(el) {
+      if (el.dataset.busy === '1') return;
+      var finalText = el.dataset.text || el.textContent;
+      el.dataset.text = finalText;
+      el.dataset.busy = '1';
+      var frame = 0, total = 16 + finalText.length;
+      var id = setInterval(function () {
+        var out = '';
+        for (var j = 0; j < finalText.length; j++) {
+          if (finalText[j] === ' ') { out += ' '; continue; }
+          var reveal = frame - j * 0.6;
+          out += reveal > 6 ? finalText[j] : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+        el.textContent = out;
+        frame++;
+        if (frame > total) { clearInterval(id); el.textContent = finalText; el.dataset.busy = '0'; }
+      }, 28);
+    }
+    var titles = Array.prototype.slice.call(document.querySelectorAll('.ep__title'));
+    if ('IntersectionObserver' in window) {
+      var io2 = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { scramble(e.target); io2.unobserve(e.target); } });
+      }, { threshold: 0.6 });
+      titles.forEach(function (t) { io2.observe(t); });
+    }
+  })();
+
+  // ---------- Interactive console ----------
+  (function consoleApp() {
+    var out = document.getElementById('con-out');
+    var form = document.getElementById('con-form');
+    var input = document.getElementById('con-input');
+    if (!out || !form || !input) return;
+
+    function line(text, cls) {
+      var p = document.createElement('p');
+      p.className = 'con-line' + (cls ? ' ' + cls : '');
+      p.textContent = text;              // textContent only — input is never rendered as HTML
+      out.appendChild(p);
+      out.scrollTop = out.scrollHeight;
+    }
+    function lines(arr, cls) { arr.forEach(function (t) { line(t, cls); }); }
+
+    var eps = [
+      'EP 3  What is next for Windows',
+      'EP 2  The new era of the digital world',
+      'EP 1  Welcome to Within The Logs'
+    ];
+    var commands = {
+      help: function () { lines([
+        'available commands:',
+        '  help        this list',
+        '  episodes    list all episodes',
+        '  latest      the newest episode',
+        '  about       what the show is',
+        '  mission     our mission in one line',
+        '  social      where to follow',
+        '  map         open the live threat map',
+        '  whoami      you',
+        '  clear       wipe the console'
+      ]); },
+      episodes: function () { lines(eps); },
+      latest: function () { line('Now playing: ' + eps[0]); },
+      about: function () { line('Within The Logs — uncovering the stories behind the breaches.'); },
+      mission: function () { line('To investigate, preserve, and explain the world of cybercrime — for everyone.'); },
+      social: function () { lines(['youtube  @withinthelogspodcast', 'x        @withinthelogs', 'reddit   r/WithintheLogs']); },
+      map: function () { line('opening live threat map…'); setTimeout(function(){ window.location.href = 'attack-map.html'; }, 500); },
+      whoami: function () { line('guest@withinthelogs — another visitor reading the logs.'); },
+      clear: function () { out.innerHTML = ''; },
+      '': function () {}
+    };
+
+    lines(['Within The Logs // shell v1.0', 'Type "help" to begin.'], 'sys');
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var raw = input.value;
+      var cmd = raw.trim().toLowerCase();
+      input.value = '';
+      if (raw.trim() !== '') line(raw.trim(), 'cmd');
+      var fn = commands[cmd];
+      if (fn) { fn(); }
+      else if (cmd === 'breach' || cmd === 'hack') { line('...', 'sys'); runBreach(); }
+      else { line('command not found: ' + cmd + '  —  try "help"'); }
+    });
+  })();
+
+  // ---------- CRT scanline mode ----------
+  var crt = document.getElementById('crt');
+  var crtBtn = document.getElementById('crt-toggle');
+  function setCrt(on) {
+    if (!crt) return;
+    crt.classList.toggle('on', on);
+    if (crtBtn) crtBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    try { localStorage.setItem('wtl_crt', on ? '1' : '0'); } catch (e) {}
+  }
+  try { if (localStorage.getItem('wtl_crt') === '1') setCrt(true); } catch (e) {}
+  if (crtBtn) crtBtn.addEventListener('click', function () { setCrt(!(crt && crt.classList.contains('on'))); });
+
+  // ---------- Live session uptime ----------
+  (function uptime() {
+    var el = document.getElementById('uptime');
+    if (!el) return;
+    var t0 = Date.now();
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    setInterval(function () {
+      var s = Math.floor((Date.now() - t0) / 1000);
+      el.textContent = 'SESSION UPTIME ' + pad(s / 3600 | 0) + ':' + pad((s / 60 | 0) % 60) + ':' + pad(s % 60);
+    }, 1000);
+  })();
+
+  // ---------- Konami breach easter egg ----------
+  function runBreach() {
+    var ov = document.getElementById('breach');
+    var txt = document.getElementById('breach-txt');
+    if (!ov) return;
+    ov.classList.add('on'); ov.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('glitch-shake');
+    blip(140, 0.5, 0.25, 'sawtooth'); setTimeout(function(){blip(90,0.6,0.25,'sawtooth');}, 260);
+    var msgs = ['BREACH DETECTED', 'ACCESS: ROOT', 'TRACE FAILED', 'WHO IS WATCHING?', 'WITHIN THE LOGS'];
+    var k = 0;
+    var swap = setInterval(function () { k++; if (txt) txt.textContent = msgs[k % msgs.length]; }, 420);
+    setTimeout(function () {
+      clearInterval(swap);
+      ov.classList.remove('on'); ov.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('glitch-shake');
+      if (txt) txt.textContent = 'BREACH DETECTED';
+    }, 2600);
+  }
+  (function konami() {
+    var seq = [38,38,40,40,37,39,37,39,66,65], pos = 0;
+    window.addEventListener('keydown', function (e) {
+      pos = (e.keyCode === seq[pos]) ? pos + 1 : (e.keyCode === seq[0] ? 1 : 0);
+      if (pos === seq.length) { pos = 0; runBreach(); }
+    });
+  })();
+
+  // ===== FX TEST LAYER =====
+  document.documentElement.classList.add('anim');
+  var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  (function reveals() {
+    var els = Array.prototype.slice.call(document.querySelectorAll('.band, .ep, .hero__copy'));
+    els.forEach(function (e) { e.classList.add('reveal'); });
+    if (reduce || !('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+
+  (function counts() {
+    var bs = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+    if (!bs.length) return;
+    function run(b) {
+      var target = parseInt(b.getAttribute('data-count'), 10) || 0, suf = b.getAttribute('data-suffix') || '';
+      if (reduce) { b.textContent = target.toLocaleString() + suf; return; }
+      var t0 = null, dur = 1100;
+      function step(ts) { if (!t0) t0 = ts; var k = Math.min((ts - t0) / dur, 1); b.textContent = Math.round(target * (1 - Math.pow(1 - k, 3))).toLocaleString() + suf; if (k < 1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    }
+    if (!('IntersectionObserver' in window)) { bs.forEach(run); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }); }, { threshold: 0.6 });
+    bs.forEach(function (b) { io.observe(b); });
+  })();
+
+  (function epWaves() {
+    Array.prototype.slice.call(document.querySelectorAll('.ep__wave')).forEach(function (w) {
+      for (var i = 0; i < 48; i++) {
+        var b = document.createElement('i');
+        b.style.height = (34 + Math.random() * 66).toFixed(0) + '%';
+        b.style.animationDelay = (Math.random() * 1.1).toFixed(2) + 's';
+        w.appendChild(b);
+      }
+    });
+  })();
+
+  (function reticle() {
+    var f = document.querySelector('.hero__frame'); if (!f) return;
+    if (reduce || !('IntersectionObserver' in window)) { f.classList.add('drawn'); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('drawn'); io.disconnect(); } }); }, { threshold: 0.4 });
+    io.observe(f);
+  })();
+
+  (function parallax() {
+    if (reduce) return;
+    var art = document.querySelector('.hero__frame'), rad = document.querySelector('.radar');
+    var tick = false;
+    window.addEventListener('scroll', function () {
+      if (tick) return; tick = true;
+      requestAnimationFrame(function () { var y = window.scrollY; if (art) art.style.transform = 'translateY(' + (y * 0.04) + 'px)'; if (rad) rad.style.marginTop = (y * 0.06) + 'px'; tick = false; });
+    }, { passive: true });
+  })();
+
+  (function cursorTrail() {
+    if (reduce || coarse) return;
+    var N = 8, dots = [];
+    for (var k = 0; k < N; k++) { var d = document.createElement('div'); d.className = 'trail'; d.style.opacity = '0'; document.body.appendChild(d); dots.push({ el: d, x: 0, y: 0 }); }
+    var mx = -50, my = -50;
+    window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+    (function loop() {
+      var px = mx, py = my;
+      dots.forEach(function (dt, idx) { dt.x += (px - dt.x) * 0.35; dt.y += (py - dt.y) * 0.35; px = dt.x; py = dt.y; dt.el.style.transform = 'translate(' + (dt.x - 3) + 'px,' + (dt.y - 3) + 'px)'; dt.el.style.opacity = String(0.4 * (1 - idx / N)); });
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  (function magnetic() {
+    if (reduce || coarse) return;
+    Array.prototype.slice.call(document.querySelectorAll('.btn')).forEach(function (b) {
+      b.addEventListener('mousemove', function (e) { var r = b.getBoundingClientRect(); b.style.transform = 'translate(' + ((e.clientX - (r.left + r.width / 2)) * 0.2) + 'px,' + ((e.clientY - (r.top + r.height / 2)) * 0.3) + 'px)'; });
+      b.addEventListener('mouseleave', function () { b.style.transform = ''; });
+    });
+  })();
+
+  (function pageWipe() {
+    var wipe = document.getElementById('wipe'); if (!wipe) return;
+    Array.prototype.slice.call(document.querySelectorAll('a[href$="attack-map.html"]')).forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        if (reduce) return;
+        e.preventDefault(); wipe.classList.add('on');
+        setTimeout(function () { window.location.href = a.getAttribute('href'); }, 460);
+      });
+    });
+  })();
+
+  (function ambient() {
+    var cv = document.getElementById('ambient'); if (!cv) return;
+    var ctx = cv.getContext('2d'), W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2), pts = [];
+    function size() { var r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); }
+    window.addEventListener('resize', size); size();
+    if (reduce) return;
+    for (var i = 0; i < 34; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.14, vy: (Math.random() - 0.5) * 0.14, r: Math.random() * 1.4 + 0.4 });
+    (function frame() {
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = 'rgba(69,227,199,1)';
+      pts.forEach(function (p) { p.x += p.vx; p.y += p.vy; if (p.x < 0) p.x += W; if (p.x > W) p.x -= W; if (p.y < 0) p.y += H; if (p.y > H) p.y -= H; ctx.globalAlpha = 0.3; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill(); });
+      ctx.globalAlpha = 1; requestAnimationFrame(frame);
+    })();
+  })();
+
+  // ---------- Ambient sound (generated, no files; off until enabled) ----------
+  var SND = { on: false, ctx: null, master: null };
+  function ac() {
+    if (!SND.ctx) {
+      try {
+        SND.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        SND.master = SND.ctx.createGain();
+        SND.master.gain.value = 0.85;             // headroom
+        SND.master.connect(SND.ctx.destination);
+      } catch (e) { SND.ctx = null; }
+    }
+    return SND.ctx;
+  }
+  function tone(freq, dur, vol, type) {
+    var c = ac(); if (!c) return;
+    try {
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'triangle'; o.frequency.value = freq;
+      var t = c.currentTime, v = (vol == null ? 0.22 : vol), d = dur || 0.09;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(v, t + 0.008);        // quick attack
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);        // decay
+      o.connect(g); g.connect(SND.master || c.destination);
+      o.start(t); o.stop(t + d + 0.02);
+    } catch (e) {}
+  }
+  function blip(freq, dur, vol, type) { if (SND.on) tone(freq, dur, vol, type); }
+  (function soundToggle() {
+    var btn = document.getElementById('snd-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var c = ac();
+      if (!c) { btn.textContent = 'Sound N/A'; return; }   // sandbox blocked audio
+      if (c.state === 'suspended' && c.resume) {
+        c.resume().then(after).catch(after);
+      } else { after(); }
+      function after() {
+        SND.on = !SND.on;
+        btn.setAttribute('aria-pressed', SND.on ? 'true' : 'false');
+        btn.textContent = SND.on ? 'Sound on' : 'Sound off';
+        if (SND.on) { tone(660, 0.1, 0.25); setTimeout(function(){ tone(990, 0.12, 0.25); }, 110); }
+      }
+    });
+    var ci = document.getElementById('con-input');
+    if (ci) ci.addEventListener('keydown', function (e) {
+      if (e.key && e.key.length === 1) blip(1500 + Math.random()*300, 0.03, 0.12, 'square');
+      else if (e.key === 'Enter') blip(520, 0.07, 0.2);
+      else if (e.key === 'Backspace') blip(900, 0.03, 0.1, 'square');
+    });
+  })();
+
+  // ---------- Scroll signal meter ----------
+  (function progress() {
+    var fill = document.getElementById('progress-fill');
+    if (!fill) return;
+    function upd() {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      var p = h > 0 ? (window.scrollY / h) : 0;
+      fill.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+    }
+    window.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd); upd();
+  })();
+
+  // ---------- Latest-episodes ticker ----------
+  (function ticker() {
+    var el = document.getElementById('ticker-text');
+    if (!el) return;
+    // pull real episode titles from the page so the bar stays in sync
+    var eps = Array.prototype.slice.call(document.querySelectorAll('.ep')).map(function (ep) {
+      var num = ep.querySelector('.ep__num'), title = ep.querySelector('.ep__title');
+      return (num ? num.textContent.trim() + ' — ' : '') + (title ? title.textContent.trim() : '');
+    }).filter(Boolean);
+    if (!eps.length) { el.textContent = 'New episodes coming soon'; return; }
+    var i = 0;
+    function show() {
+      el.style.opacity = '0';
+      setTimeout(function () { el.textContent = 'NEW · ' + eps[i % eps.length]; el.style.opacity = '1'; i++; }, 220);
+    }
+    el.textContent = 'NEW · ' + eps[0]; i = 1;
+    if (!reduce) setInterval(show, 4200);
+  })();
+
+  // ---------- Latest-episode player (real audio + waveform drawn from the file) ----------
+  (function playerApp() {
+    var wave = document.getElementById('player-wave');
+    var btn = document.getElementById('player-btn');
+    var time = document.getElementById('player-time');
+    var audio = document.getElementById('player-audio');
+    if (!wave || !btn || !audio) return;
+    // bar heights computed from the actual audio (RMS per bucket)
+    var PEAKS = [52.3,50.5,60.4,47.7,57.5,38.8,41.7,56,47,74.1,88.6,76.1,67.6,74.9,82.9,91.9,82.1,79.3,92,100,88.7,81.5,73.3,71.3,93.3,91.6,99.1,47.6,74.8,84.1,84.7,79.4,59,76.3,87.3,93.6,92.4,83.5,85.8,85.8,88.5,81.4,70.6,70,68.3,64,53.1,63.1,73.9,91.5,91,64,58.3,67,47.9,33.2];
+    var bars = [];
+    PEAKS.forEach(function (h) {
+      var s = document.createElement('span');
+      s.style.height = Math.max(6, Math.min(100, h)) + '%';
+      wave.appendChild(s); bars.push(s);
+    });
+    var N = bars.length;
+    function fmt(sec) { sec = Math.max(0, sec | 0); var m = sec / 60 | 0, s = sec % 60; return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s; }
+    function paint() {
+      var dur = audio.duration || 0, cur = audio.currentTime || 0;
+      var idx = dur ? Math.floor(cur / dur * N) : -1;
+      bars.forEach(function (b, k) { b.classList.toggle('played', k < idx); });
+      if (time) time.textContent = fmt(cur) + ' / ' + fmt(dur);
+    }
+    btn.addEventListener('click', function () {
+      if (audio.paused) { audio.play().catch(function () {}); } else { audio.pause(); }
+    });
+    audio.addEventListener('play', function () { btn.textContent = '❚❚'; btn.setAttribute('aria-label', 'Pause'); });
+    audio.addEventListener('pause', function () { btn.textContent = '▶'; btn.setAttribute('aria-label', 'Play latest episode'); });
+    audio.addEventListener('ended', function () { btn.textContent = '▶'; btn.setAttribute('aria-label', 'Play latest episode'); });
+    audio.addEventListener('timeupdate', paint);
+    audio.addEventListener('loadedmetadata', paint);
+    // click / drag the waveform to seek
+    wave.style.cursor = 'pointer';
+    function seekAt(clientX) { var r = wave.getBoundingClientRect(); var frac = Math.max(0, Math.min(1, (clientX - r.left) / r.width)); if (audio.duration) { audio.currentTime = frac * audio.duration; paint(); } }
+    var seeking = false;
+    wave.addEventListener('pointerdown', function (e) { seeking = true; seekAt(e.clientX); try { wave.setPointerCapture(e.pointerId); } catch (x) {} });
+    wave.addEventListener('pointermove', function (e) { if (seeking) seekAt(e.clientX); });
+    window.addEventListener('pointerup', function () { seeking = false; });
+    paint();
+  })();
+
+  // ---------- Per-episode case file ----------
+  (function caseFile() {
+    var modal = document.getElementById('case');
+    if (!modal) return;
+    var art = document.getElementById('case-art');
+    var tag = document.getElementById('case-tag');
+    var title = document.getElementById('case-title');
+    var meta = document.getElementById('case-meta');
+    var brief = document.getElementById('case-brief');
+    var closeBtn = document.getElementById('case-close');
+    var lastFocus = null, savedY = 0;
+
+    function buildBrief(text) {
+      brief.textContent = '';
+      // [[redacted]] spans render as black bars you click to declassify
+      var parts = text.split(/(\[\[[^\]]+\]\])/);
+      parts.forEach(function (p) {
+        var m = /^\[\[([^\]]+)\]\]$/.exec(p);
+        if (m) {
+          var s = document.createElement('span');
+          s.className = 'case__redact'; s.textContent = m[1]; s.title = 'Click to declassify';
+          s.addEventListener('click', function () { s.classList.add('revealed'); blip(300,0.07,0.2,'square'); });
+          brief.appendChild(s);
+        } else if (p) { brief.appendChild(document.createTextNode(p)); }
+      });
+    }
+    function open(ep) {
+      art.src = ep.getAttribute('data-cover'); art.alt = ep.querySelector('.ep__title').textContent + ' cover';
+      tag.textContent = ep.getAttribute('data-tag') || 'CASE FILE';
+      title.textContent = ep.querySelector('.ep__title').textContent;
+      meta.textContent = ep.querySelector('.ep__num').textContent + '  ·  STATUS: OPEN  ·  SOURCES: VERIFIED';
+      buildBrief(ep.getAttribute('data-brief') || '');
+      savedY = window.scrollY || 0;
+      document.body.style.position = 'fixed'; document.body.style.top = (-savedY) + 'px';
+      document.body.style.left = '0'; document.body.style.right = '0'; document.body.style.width = '100%';
+      modal.classList.add('on'); modal.setAttribute('aria-hidden','false');
+      lastFocus = document.activeElement; closeBtn.focus(); blip(520,0.09,0.22);
+    }
+    function close() {
+      modal.classList.remove('on'); modal.setAttribute('aria-hidden','true');
+      document.body.style.position = ''; document.body.style.top = ''; document.body.style.left = ''; document.body.style.right = ''; document.body.style.width = '';
+      window.scrollTo(0, savedY);
+      if (lastFocus) lastFocus.focus();
+    }
+
+    Array.prototype.slice.call(document.querySelectorAll('.ep[data-brief]')).forEach(function (ep) {
+      ep.addEventListener('click', function (e) { e.preventDefault(); open(ep); });
+    });
+    closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+    window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('on')) close(); });
+  })();
+
+  // ---------- 3D tilt on episode covers ----------
+  (function tiltCovers() {
+    if (reduce || coarse) return;
+    Array.prototype.slice.call(document.querySelectorAll('.ep__thumb')).forEach(function (t) {
+      t.addEventListener('mousemove', function (e) {
+        var r = t.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+        t.style.transform = 'perspective(420px) rotateY(' + (px * 16) + 'deg) rotateX(' + (-py * 16) + 'deg)';
+      });
+      t.addEventListener('mouseleave', function () { t.style.transform = ''; });
+    });
+  })();
+})();
+</script>

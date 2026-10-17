@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Live Threat Map — Within The Logs</title>
+<link rel="icon" href="art/favicon-32.png" sizes="32x32">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+:root{
+  --bg:#000; --panel:#0A0A0A; --line:#222; --line2:#333;
+  --fg:#F2F2F2; --muted:#8A8A8A;
+  --cyan:#45E3C7;
+  --ddos:#45E3C7; --malware:#FF6B5E; --phish:#8AB4FF; --exploit:#6FD6A4; --intrusion:#D9A6FF;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --disp:Archivo,"IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);overflow:hidden}
+a{color:var(--fg);text-decoration:none}
+.wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;
+  padding:12px clamp(14px,4vw,28px);border-bottom:1px solid var(--line);z-index:5;background:rgba(0,0,0,.6)}
+.brand{display:inline-flex;align-items:center;gap:10px;font-family:var(--disp);font-stretch:125%;font-weight:800;
+  text-transform:uppercase;letter-spacing:.04em;font-size:15px}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:blink 1.4s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+.controls{display:flex;align-items:center;gap:8px}
+.btn{font-size:12px;color:var(--muted);border:1px solid var(--line2);padding:7px 11px;min-height:36px;
+  display:inline-flex;align-items:center;gap:6px;background:#000;font-family:var(--mono);cursor:pointer}
+.btn:hover{border-color:var(--fg);color:var(--fg)}
+.btn[aria-pressed="true"]{border-color:var(--cyan);color:var(--cyan)}
+.stage{position:relative;flex:1 1 auto;min-height:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hud{position:absolute;top:14px;left:clamp(14px,4vw,28px);z-index:4;display:flex;flex-wrap:wrap;gap:10px 22px;pointer-events:none}
+.stat{display:flex;flex-direction:column}
+.stat b{font-family:var(--disp);font-stretch:125%;font-weight:800;font-size:clamp(20px,4vw,30px);line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+.legend{position:absolute;bottom:14px;left:clamp(14px,4vw,28px);z-index:4;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11px;color:var(--muted);pointer-events:none}
+.legend i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:-1px}
+.log{position:absolute;top:0;right:0;bottom:0;width:min(330px,78vw);z-index:4;background:linear-gradient(to left,rgba(0,0,0,.82),rgba(0,0,0,.2));
+  border-left:1px solid var(--line);display:flex;flex-direction:column;transform:translateX(0);transition:transform .3s ease}
+.log.hidden{transform:translateX(100%)}
+.log__bar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.log__list{flex:1 1 auto;overflow:hidden;padding:6px 0}
+.row{display:grid;grid-template-columns:62px 1fr auto;gap:8px;align-items:center;padding:6px 14px;font-size:12px;border-bottom:1px solid #0f0f0f;animation:rowin .3s ease}
+@keyframes rowin{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.row .t{color:var(--muted);font-size:11px}
+.row .r{color:var(--muted);font-size:11px;text-align:right}
+.row .k{font-weight:500}
+.logtoggle{position:absolute;top:14px;right:14px;z-index:6;display:none}
+@media (max-width:720px){ .log{width:86vw} .logtoggle{display:inline-flex} .hud{top:auto;bottom:40px} .legend{bottom:12px} }
+.note{position:absolute;bottom:14px;right:14px;z-index:4;font-size:10px;color:#555;max-width:300px;text-align:right}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="brand"><span class="dot"></span>Within The Logs · Threat Map</span>
+    <div class="controls">
+      <button class="btn" id="snd" type="button" aria-pressed="false">♪ Sound off</button>
+      <a class="btn" href="/">&lsaquo; back to site</a>
+    </div>
+  </header>
+  <div class="stage">
+    <canvas id="map"></canvas>
+    <div class="hud">
+      <div class="stat"><b id="s-total">0</b><span>attacks today</span></div>
+      <div class="stat"><b id="s-rate">0</b><span>per second</span></div>
+      <div class="stat"><b id="s-live">0</b><span>in flight</span></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <button class="btn logtoggle" id="logtoggle" type="button">feed</button>
+    <aside class="log" id="log">
+      <div class="log__bar"><span>// live feed</span><span id="feedcount">0</span></div>
+      <div class="log__list" id="loglist"></div>
+    </aside>
+    <div class="note" id="note">Simulated data for demonstration. Not a live feed.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('map'), ctx=cv.getContext('2d');
+  var W=0,H=0,R=0,CX=0,CY=0,DPR=Math.min(window.devicePixelRatio||1,2);
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var TILT=-0.38; // radians, tips the north pole toward viewer
+
+  var NODES=[
+    ['N. Virginia',38.9,-77.0],['San Francisco',37.8,-122.4],['Toronto',43.7,-79.4],
+    ['São Paulo',-23.5,-46.6],['London',51.5,-0.1],['Amsterdam',52.4,4.9],['Frankfurt',50.1,8.7],
+    ['Moscow',55.7,37.6],['Tel Aviv',32.1,34.8],['Dubai',25.2,55.3],['Lagos',6.5,3.4],
+    ['Johannesburg',-26.2,28.0],['Mumbai',19.1,72.9],['Singapore',1.35,103.8],['Hong Kong',22.3,114.2],
+    ['Beijing',39.9,116.4],['Shanghai',31.2,121.5],['Seoul',37.6,127.0],['Tokyo',35.7,139.7],['Sydney',-33.9,151.2]
+  ];
+  var TYPES=[
+    ['DDoS','#45E3C7',443],['Malware','#FF6B5E',445],
+    ['Phishing','#8AB4FF',25],['Exploit','#6FD6A4',8080],['Intrusion','#D9A6FF',22]
+  ];
+  (function legend(){
+    var el=document.getElementById('legend');
+    TYPES.forEach(function(t){ var s=document.createElement('span'); var i=document.createElement('i'); i.style.background=t[1]; s.appendChild(i); s.appendChild(document.createTextNode(t[0])); el.appendChild(s); });
+  })();
+
+  // --- rough continent outlines [lon,lat] for a dotted-land globe ---
+  var LAND=[
+    [[-168,65],[-150,71],[-120,72],[-95,70],[-70,62],[-58,50],[-66,44],[-80,26],[-97,18],[-106,23],[-124,40],[-140,59]],
+    [[-81,9],[-60,8],[-50,0],[-35,-6],[-40,-23],[-55,-35],[-66,-54],[-74,-50],[-70,-18],[-80,-4]],
+    [[-17,34],[0,36],[11,37],[25,32],[35,31],[43,12],[51,12],[42,-5],[40,-17],[26,-34],[18,-35],[9,-18],[-5,5],[-16,14],[-17,26]],
+    [[-10,36],[-2,43],[2,51],[10,54],[20,54],[30,59],[28,45],[20,41],[10,38],[0,36]],
+    [[26,40],[40,48],[50,45],[60,55],[75,68],[100,73],[130,72],[160,68],[178,66],[160,60],[142,48],[135,35],[122,31],[108,20],[95,8],[78,8],[70,20],[58,25],[48,30],[36,33]],
+    [[113,-22],[122,-18],[135,-12],[143,-12],[150,-22],[150,-38],[138,-36],[128,-33],[115,-34]]
+  ];
+  function pip(pt,poly){
+    var x=pt[0],y=pt[1],inside=false;
+    for(var i=0,j=poly.length-1;i<poly.length;j=i++){
+      var xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];
+      if(((yi>y)!==(yj>y)) && (x < (xj-xi)*(y-yi)/(yj-yi)+xi)) inside=!inside;
+    }
+    return inside;
+  }
+  var DOTS=[];
+  for(var la=-56;la<=76;la+=2.2){
+    for(var lo=-180;lo<180;lo+=2.2){
+      var on=false; for(var p=0;p<LAND.length;p++){ if(pip([lo,la],LAND[p])){on=true;break;} }
+      if(on) DOTS.push([la,lo]);
+    }
+  }
+
+  function resize(){
+    var r=cv.getBoundingClientRect(); W=r.width; H=r.height;
+    cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    R=Math.min(W,H)*0.40; CX=W/2; CY=H/2;
+  }
+  window.addEventListener('resize',resize); resize();
+
+  var rot=0; // longitude rotation (radians)
+  // lat/lon (deg) + radius factor -> screen [x,y,z] ; z>0 = front hemisphere
+  function sph(lat,lon,rf){
+    rf=rf||1;
+    var la=lat*Math.PI/180, lo=lon*Math.PI/180 + rot;
+    var x=Math.cos(la)*Math.sin(lo);
+    var y=Math.sin(la);
+    var z=Math.cos(la)*Math.cos(lo);
+    var y2=y*Math.cos(TILT)-z*Math.sin(TILT);
+    var z2=y*Math.sin(TILT)+z*Math.cos(TILT);
+    return [CX+R*rf*x, CY-R*rf*y2, z2];
+  }
+
+  var arcs=[], pulses=[], total=0, rateCount=0, rateT=Date.now();
+  var REAL=null, HOME=null, lastSpawn=0;   // REAL=loaded threats.json; HOME=honeypot target (arcs mode)
+  function typeByName(name){ for(var i=0;i<TYPES.length;i++){ if(TYPES[i][0]===name) return TYPES[i]; } return TYPES[4]; }
+
+  function spawn(){
+    if(REAL){
+      var n=NODES[(Math.random()*NODES.length)|0]; var ty=typeByName(n[4]);
+      if(HOME){
+        arcs.push({a:n,b:HOME,t:0,sp:0.006+Math.random()*0.006,col:ty[1],ty:ty});
+      } else {
+        var dp=sph(n[1],n[2]); if(dp[2]>0) pulses.push({x:dp[0],y:dp[1],r:0,col:ty[1]});
+        addLog({a:n,b:['observed'],col:ty[1],ty:ty,hot:true}); total++; rateCount++; ping(ty);
+      }
+      return;
+    }
+    var a=NODES[(Math.random()*NODES.length)|0], b=NODES[(Math.random()*NODES.length)|0];
+    if(a===b) return;
+    var ty=TYPES[(Math.random()*TYPES.length)|0];
+    arcs.push({a:a,b:b,t:0,sp:0.006+Math.random()*0.006,col:ty[1],ty:ty});
+  }
+  // great-circle-ish point between two lat/lon, lifted above the surface
+  function arcPt(a,b,t){
+    var lat=a[1]+(b[1]-a[1])*t, lon=a[2]+(b[2]-a[2])*t;
+    // shortest-way longitude interpolation
+    var dl=b[2]-a[2]; if(dl>180) lon=a[2]+(b[2]-360-a[2])*t; else if(dl<-180) lon=a[2]+(b[2]+360-a[2])*t;
+    var lift=1+0.22*Math.sin(Math.PI*t);
+    return sph(lat,lon,lift);
+  }
+
+  function addLog(ar){
+    var list=document.getElementById('loglist');
+    var row=document.createElement('div'); row.className='row';
+    var d=new Date(); function p(n){return(n<10?'0':'')+n;}
+    var t=document.createElement('span'); t.className='t'; t.textContent=p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+    var k=document.createElement('span'); k.className='k'; k.style.color=ar.col; k.textContent=ar.ty[0];
+    var r=document.createElement('span'); r.className='r'; r.textContent=':'+ar.ty[2];
+    row.appendChild(t); row.appendChild(k); row.appendChild(r);
+    var sub=document.createElement('span'); sub.className='r'; sub.style.gridColumn='1 / -1'; sub.style.textAlign='left'; sub.style.color='#9a9a9a';
+    sub.textContent=ar.hot ? (ar.a[0]+(ar.a[3]?'  ·  '+ar.a[3]+' hosts':'')) : (ar.a[0]+'  →  '+ar.b[0]);
+    row.appendChild(sub);
+    list.insertBefore(row,list.firstChild);
+    while(list.children.length>14) list.removeChild(list.lastChild);
+  }
+
+  function drawGlobe(){
+    // ocean disc with subtle depth
+    var g=ctx.createRadialGradient(CX-R*0.3,CY-R*0.3,R*0.2,CX,CY,R);
+    g.addColorStop(0,'#071210'); g.addColorStop(1,'#020605');
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,6.28); ctx.fillStyle=g; ctx.fill();
+    // rim glow
+    ctx.save(); ctx.shadowColor='rgba(69,227,199,0.55)'; ctx.shadowBlur=18;
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,6.28); ctx.strokeStyle='rgba(69,227,199,0.6)'; ctx.lineWidth=1.3; ctx.stroke();
+    ctx.restore();
+
+    // graticule (front hemisphere only)
+    ctx.strokeStyle='rgba(69,227,199,0.10)'; ctx.lineWidth=1;
+    var lat,lon,i,pt,started;
+    for(lat=-60;lat<=60;lat+=30){ started=false; ctx.beginPath();
+      for(lon=-180;lon<=180;lon+=6){ pt=sph(lat,lon); if(pt[2]>0){ if(!started){ctx.moveTo(pt[0],pt[1]);started=true;} else ctx.lineTo(pt[0],pt[1]); } else started=false; }
+      ctx.stroke(); }
+    for(lon=-180;lon<180;lon+=30){ started=false; ctx.beginPath();
+      for(lat=-90;lat<=90;lat+=6){ pt=sph(lat,lon); if(pt[2]>0){ if(!started){ctx.moveTo(pt[0],pt[1]);started=true;} else ctx.lineTo(pt[0],pt[1]); } else started=false; }
+      ctx.stroke(); }
+
+    // land dots
+    for(i=0;i<DOTS.length;i++){ pt=sph(DOTS[i][0],DOTS[i][1]); if(pt[2]>0){
+      var a=0.25+pt[2]*0.55; ctx.fillStyle='rgba(120,230,214,'+a.toFixed(3)+')';
+      ctx.fillRect(pt[0]-0.9,pt[1]-0.9,1.8,1.8); } }
+  }
+
+  function drawNodes(){
+    for(var i=0;i<NODES.length;i++){ var n=NODES[i], pt=sph(n[1],n[2]); if(pt[2]<=0) continue;
+      var r=1.6, col='rgba(69,227,199,0.9)';
+      if(REAL){ r=Math.min(2+Math.log((n[3]||1)+1)*1.2, 7); col=typeByName(n[4])[1]; }
+      ctx.fillStyle=col; ctx.globalAlpha=0.9; ctx.beginPath(); ctx.arc(pt[0],pt[1],r,0,6.28); ctx.fill(); ctx.globalAlpha=1; }
+  }
+
+  function frame(){
+    rot += reduce?0.0008:0.0016;
+    ctx.clearRect(0,0,W,H);
+    drawGlobe(); drawNodes();
+
+    for(var i=arcs.length-1;i>=0;i--){
+      var ar=arcs[i]; ar.t+=ar.sp;
+      var tt=Math.min(ar.t,1), tail=Math.max(0,tt-0.26);
+      ctx.strokeStyle=ar.col; ctx.lineWidth=1.5; ctx.globalAlpha=0.9;
+      var steps=22, started=false, lastFront=false, hp=null;
+      ctx.beginPath();
+      for(var s=0;s<=steps;s++){
+        var pt=arcPt(ar.a,ar.b,tail+(tt-tail)*(s/steps));
+        if(pt[2]>0.02){ if(!started||!lastFront){ctx.moveTo(pt[0],pt[1]);started=true;} else ctx.lineTo(pt[0],pt[1]); lastFront=true; if(s===steps) hp=pt; }
+        else lastFront=false;
+      }
+      ctx.stroke(); ctx.globalAlpha=1;
+      if(hp){ ctx.fillStyle=ar.col; ctx.beginPath(); ctx.arc(hp[0],hp[1],2.3,0,6.28); ctx.fill(); }
+      if(ar.t>=1){ var dp=sph(ar.b[1],ar.b[2]); if(dp[2]>0) pulses.push({x:dp[0],y:dp[1],r:0,col:ar.col}); addLog(ar); total++; rateCount++; ping(ar.ty); arcs.splice(i,1); }
+    }
+    for(var j=pulses.length-1;j>=0;j--){
+      var pu=pulses[j]; pu.r+=1.4;
+      ctx.strokeStyle=pu.col; ctx.globalAlpha=Math.max(0,1-pu.r/24); ctx.lineWidth=1.3;
+      ctx.beginPath(); ctx.arc(pu.x,pu.y,pu.r,0,6.28); ctx.stroke(); ctx.globalAlpha=1;
+      if(pu.r>24) pulses.splice(j,1);
+    }
+
+    if(REAL && !HOME){ if(Date.now()-lastSpawn>600 && Math.random()<0.7){ lastSpawn=Date.now(); spawn(); } }
+    else if(arcs.length<(reduce?6:24) && Math.random()<(reduce?0.25:0.65)) spawn();
+
+    document.getElementById('s-live').textContent=(REAL&&!HOME)?NODES.length:arcs.length;
+    if(Date.now()-rateT>=1000){ document.getElementById('s-rate').textContent=rateCount; rateCount=0; rateT=Date.now(); }
+    document.getElementById('s-total').textContent=total.toLocaleString();
+    document.getElementById('feedcount').textContent=total.toLocaleString();
+    requestAnimationFrame(frame);
+  }
+
+  total=18234+Math.floor(Math.random()*4000);
+  for(var k=0;k<(reduce?4:12);k++) spawn();
+  requestAnimationFrame(frame);
+
+  var log=document.getElementById('log'), lt=document.getElementById('logtoggle');
+  if(window.matchMedia('(max-width:720px)').matches) log.classList.add('hidden');
+  lt.addEventListener('click',function(){ log.classList.toggle('hidden'); });
+
+  // ---------- Real data: load threats.json if present, else stay simulated ----------
+  function timeAgo(iso){ try{ var s=(Date.now()-new Date(iso).getTime())/1000; if(s<90)return'just now'; if(s<5400)return Math.round(s/60)+' min ago'; if(s<172800)return Math.round(s/3600)+' hr ago'; return Math.round(s/86400)+' days ago'; }catch(e){ return ''; } }
+  function applyReal(j){
+    if(!j.points || !j.points.length) return;
+    NODES = j.points.map(function(p){ return [p.name, p.lat, p.lon, p.count||1, p.type||'Intrusion']; });
+    if(j.home && j.home.lat!=null) HOME=[j.home.name||'home', j.home.lat, j.home.lon];
+    REAL=j; arcs=[]; pulses=[]; lastSpawn=0;
+    total = j.total || NODES.reduce(function(s,n){ return s+(n[3]||1); }, 0);
+    var note=document.getElementById('note');
+    if(note) note.textContent=(j.source||'Live threat data')+(j.generated?' · updated '+timeAgo(j.generated):'')+' · aggregated by location';
+    var lbls=document.querySelectorAll('.stat span');
+    if(lbls[0]) lbls[0].textContent=HOME?'attacks observed':'malicious hosts';
+    if(lbls[1]) lbls[1].textContent='shown / sec';
+    if(lbls[2]) lbls[2].textContent=HOME?'in flight':'locations';
+    for(var k=0;k<(HOME?8:0);k++) spawn();
+  }
+  fetch('threats.json',{cache:'no-store'})
+    .then(function(r){ return r.ok?r.json():null; })
+    .then(function(j){ if(j) applyReal(j); })
+    .catch(function(){ /* no feed file → stays simulated, honestly labeled */ });
+
+  // ---------- Sound: impact pings (off until enabled) ----------
+  var SND={on:false,ctx:null,master:null,last:0};
+  function ac(){ if(!SND.ctx){ try{ SND.ctx=new (window.AudioContext||window.webkitAudioContext)(); SND.master=SND.ctx.createGain(); SND.master.gain.value=0.9; SND.master.connect(SND.ctx.destination); }catch(e){ SND.ctx=null; } } return SND.ctx; }
+  function tone(freq,dur,vol,type){ var c=ac(); if(!c) return; try{ var o=c.createOscillator(),g=c.createGain(); o.type=type||'sine'; o.frequency.value=freq; var t=c.currentTime,v=vol==null?0.3:vol,d=dur||0.12; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v,t+0.006); g.gain.exponentialRampToValueAtTime(0.0001,t+d); o.connect(g); g.connect(SND.master||c.destination); o.start(t); o.stop(t+d+0.02); }catch(e){} }
+  var FREQ={'DDoS':523,'Malware':392,'Phishing':659,'Exploit':784,'Intrusion':330};
+  function ping(ty){ if(!SND.on) return; var n=Date.now(); if(n-SND.last<80) return; SND.last=n; tone(FREQ[ty[0]]||500,0.14,0.22,'sine'); }
+  var sb=document.getElementById('snd');
+  sb.addEventListener('click',function(){ var c=ac(); if(!c){ sb.textContent='Sound N/A'; return; }
+    function after(){ SND.on=!SND.on; sb.setAttribute('aria-pressed',SND.on?'true':'false'); sb.textContent=SND.on?'♪ Sound on':'♪ Sound off'; if(SND.on){ tone(523,0.1,0.28); setTimeout(function(){tone(784,0.12,0.28);},110); } }
+    if(c.state==='suspended'&&c.resume) c.resume().then(after).catch(after); else after();
+  });
+})();
+</script>
+</body>
+</html>
