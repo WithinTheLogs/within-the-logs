@@ -1,18 +1,19 @@
 <meta charset="utf-8">
-<title>Within The Logs — Uncovering the stories behind the breaches</title>
-<meta name="description" content="A podcast about cybercrime, digital investigation, and the traces hackers leave behind.">
+<title>Within The Logs - Uncovering the stories behind the breaches.</title>
+<meta name="description" content="A storytelling podcast about the hidden side of the internet — true cybercrime, espionage, and the digital traces left by hackers, insiders, and covert operations.">
+<link rel="icon" href="art/favicon-16.png" sizes="16x16">
 <link rel="icon" href="art/favicon-32.png" sizes="32x32">
 <link rel="icon" href="art/favicon-512.png" sizes="512x512">
 <link rel="apple-touch-icon" href="art/favicon-180.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Within The Logs">
-<meta property="og:description" content="A podcast about cybercrime, digital investigation, and the traces hackers leave behind.">
+<meta property="og:description" content="A storytelling podcast about the hidden side of the internet — true cybercrime, espionage, and the digital traces left by hackers, insiders, and covert operations.">
 <meta property="og:image" content="art/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Within The Logs">
-<meta name="twitter:description" content="A podcast about cybercrime, digital investigation, and the traces hackers leave behind.">
+<meta name="twitter:description" content="A storytelling podcast about the hidden side of the internet — true cybercrime, espionage, and the digital traces left by hackers, insiders, and covert operations.">
 <meta name="twitter:image" content="art/og-image.jpg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,700;125,800;125,900&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
 <style>
@@ -266,6 +267,12 @@ h1, h2 {
 
 /* Latest-episode player */
 .player { display: flex; align-items: center; gap: 14px; margin-top: 4px; padding: 12px 14px; border: 1px solid var(--line-strong); max-width: 440px; }
+.platforms { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: flex-start; margin-top: 2px; }
+.platforms a { display: inline-flex; flex-direction: column; align-items: center; gap: 7px; min-width: 60px; color: var(--fg); text-decoration: none; transition: color 0.15s ease, transform 0.15s ease; }
+.platforms a:hover { color: var(--cyan); transform: translateY(-2px); }
+.platforms svg { width: 25px; height: 25px; fill: currentColor; display: block; }
+.platforms span { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
+.player__cap { margin-top: 4px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .player__btn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent); color: var(--accent-ink); font-size: 15px; display: inline-flex; align-items: center; justify-content: center; }
 .player__wave { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 2px; height: 36px; }
 .player__wave span { flex: 1 1 auto; background: var(--line-strong); min-height: 3px; transition: background-color 0.1s linear; }
@@ -284,6 +291,7 @@ h1, h2 {
 .case__title { margin: 0; font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: clamp(22px, 3vw, 32px); line-height: 1.05; }
 .case__meta { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
 .case__brief { color: var(--fg-soft); }
+.case__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .case__redact { background: var(--fg); color: transparent; cursor: pointer; border-radius: 1px; user-select: none; }
 .case__redact.revealed { background: none; color: var(--fg-soft); }
 .case__stamp { align-self: flex-start; margin-top: 4px; border: 2px solid var(--accent); color: var(--accent); font-family: var(--mono); font-weight: 700; letter-spacing: 0.14em; padding: 4px 12px; transform: rotate(-5deg); opacity: 0.85; }
@@ -325,9 +333,7 @@ a:hover { color: var(--amber); }
 
 /* Oversized section index numbers (editorial, hang left on wide screens) */
 .band[data-index] > .wrap { position: relative; }
-.idx { display: block; font-family: var(--display); font-stretch: 125%; font-weight: 900;
-  font-size: clamp(40px, 7vw, 76px); line-height: 0.8; letter-spacing: -0.03em;
-  color: transparent; -webkit-text-stroke: 1.5px var(--line-strong); margin: -6px 0 14px; user-select: none; }
+.idx { display: none; }
 
 /* Episode row: thumb · number · [title + brief + waveform] · chip · action */
 .ep__thumb { position: relative; align-self: flex-start; }
@@ -527,20 +533,27 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
       <canvas class="ambient" id="ambient" aria-hidden="true"></canvas>
       <div class="hero__copy">
         <h1>Uncovering the stories behind the breaches.</h1>
-        <p class="hero__lede">A podcast about cybercrime, digital investigation, and the traces hackers leave behind.</p>
+        <p class="hero__lede">A storytelling podcast about the hidden side of the internet — true cybercrime, espionage, and the digital traces left by hackers, insiders, and covert operations.</p>
         <div class="actions">
           <a class="btn btn--primary" href="#episodes">
             <svg aria-hidden="true" width="14" height="16" viewBox="0 0 14 16"><path d="M1 1.5v13l12-6.5z" fill="currentColor"></path></svg>
             Listen to the latest episode
           </a>
-          <a class="btn" href="https://youtube.com/@withinthelogspodcast">Watch on YouTube</a>
         </div>
-        <div class="player" id="player" aria-label="Latest episode player">
+        <div class="platforms" aria-label="Listen on">
+          <a href="https://www.buzzsprout.com/2498368" title="Apple Podcasts"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9 9 0 0 0-7.9 13.3l1.6-1.4A7 7 0 1 1 19 11a6.9 6.9 0 0 1-1.7 4.6l1.6 1.4A9 9 0 0 0 12 2z"/><path d="M12 6a5 5 0 0 0-3.7 8.4l1.6-1.4A3 3 0 1 1 15 11a3 3 0 0 1-.9 2.1l1.6 1.4A5 5 0 0 0 12 6z"/><circle cx="12" cy="11.5" r="1.8"/><path d="M10.1 14.4h3.8l1 7.6h-5.8z"/></svg><span>Apple Podcasts</span></a>
+          <a href="https://www.buzzsprout.com/2498368" title="Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.62.62 0 0 1-.86.21c-2.35-1.44-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.21c3.82-.87 7.1-.5 9.72 1.1a.62.62 0 0 1 .21.86zm1.23-2.74a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.17a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.56 11.23 1.33a.78.78 0 0 1 .26 1.07zm.11-2.85c-3.23-1.92-8.56-2.1-11.64-1.16a.93.93 0 1 1-.54-1.78c3.54-1.07 9.42-.87 13.14 1.34a.93.93 0 1 1-.96 1.6z"/></svg><span>Spotify</span></a>
+          <a href="https://youtube.com/@WithinTheLogs" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.376.505A3.016 3.016 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136C4.495 20.455 12 20.455 12 20.455s7.505 0 9.376-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span>YouTube</span></a>
+          <a href="https://feeds.buzzsprout.com/2498368.rss" title="RSS feed"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.18 15.64a2.18 2.18 0 1 1 0 4.36 2.18 2.18 0 0 1 0-4.36zM4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44zm0 5.66a9.9 9.9 0 0 1 9.9 9.9H11.07A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg><span>RSS</span></a>
+        </div>
+        <p class="player__cap mono">▸ Intro theme · 0:53</p>
+        <div class="player" id="player" aria-label="Intro theme player">
           <audio id="player-audio" src="art/latest-episode.mp3" preload="metadata"></audio>
-          <button class="player__btn" id="player-btn" type="button" aria-label="Play latest episode">▶</button>
+          <button class="player__btn" id="player-btn" type="button" aria-label="Play intro theme">▶</button>
           <div class="player__wave" id="player-wave"></div>
           <div class="player__time" id="player-time">00:00</div>
         </div>
+        <audio id="episode-audio" preload="none"></audio>
       </div>
       <span class="hero__frame">
         <span class="flare" aria-hidden="true"></span>
@@ -550,16 +563,6 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
     </section>
   </div>
 
-  <section class="band stats" data-index="01" data-log="// SIGNALS — BY THE NUMBERS">
-    <div class="wrap">
-      <span class="idx" aria-hidden="true">01</span>
-      <div class="statblk"><b data-count="3">0</b><span>Episodes</span></div>
-      <div class="statblk"><b data-count="12">0</b><span>Breaches examined</span></div>
-      <div class="statblk"><b data-count="50" data-suffix="+">0</b><span>Sources cited</span></div>
-      <div class="statblk"><b data-count="18">0</b><span>Countries in the stories</span></div>
-    </div>
-  </section>
-
   <section class="band" id="episodes" data-index="02" data-log="// EPISODES — INDEX">
     <div class="wrap">
       <span class="idx" aria-hidden="true">02</span>
@@ -568,38 +571,16 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
         <a class="textlink" href="#episodes">All episodes</a>
       </div>
       <div class="eps">
-        <a class="ep" href="#episodes" data-cover="art/ep-leopard.jpg" data-tag="CASE FILE // EP 003" data-brief="A newly disclosed Windows flaw opens a door nobody knew was there. We trace who walked through it first, what they were after, and why the patch came three weeks late.">
-          <span class="ep__thumb"><img class="ep__art" src="art/ep-leopard.jpg" width="1000" height="1000" alt="Leopard episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
-          <span class="ep__num">EP 3</span>
-          <span class="ep__main">
-            <span class="ep__title">What is next for Windows</span>
-            <span class="ep__brief">A zero-day nobody knew was open — and who walked through the door first.</span>
-            <span class="ep__wave" aria-hidden="true"></span>
-          </span>
-          <span class="ep__chip">CASE FILE</span>
-          <span class="ep__go">Open file</span>
-        </a>
-        <a class="ep" href="#episodes" data-cover="art/ep-spider.jpg" data-tag="CASE FILE // EP 002" data-brief="The web got faster, louder, and far easier to hide inside. A look at the new era of the digital world — and the predators waiting in the threads that connect all of it.">
-          <span class="ep__thumb"><img class="ep__art" src="art/ep-spider.jpg" width="1000" height="1000" alt="Spider episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
-          <span class="ep__num">EP 2</span>
-          <span class="ep__main">
-            <span class="ep__title">The new era of the digital world</span>
-            <span class="ep__brief">The new internet — faster, louder, easier to hide inside — and the predators waiting in the threads.</span>
-            <span class="ep__wave" aria-hidden="true"></span>
-          </span>
-          <span class="ep__chip">CASE FILE</span>
-          <span class="ep__go">Open file</span>
-        </a>
-        <a class="ep" href="#episodes" data-cover="art/ep-owl.jpg" data-tag="CASE FILE // EP 001" data-brief="Where it begins. What this show is, who's behind it, and the one rule we never break: every breach tells a story. Welcome to Within The Logs.">
-          <span class="ep__thumb"><img class="ep__art" src="art/ep-owl.jpg" width="1000" height="1000" alt="Owl episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
+        <a class="ep" href="#episodes" data-cover="art/logo-cameras.jpg" data-tag="CASE FILE // EP 001" data-audio="https://www.buzzsprout.com/2498368/episodes/19977604-within-the-logs-ep-1-darkside-in-the-pipeline.mp3" data-brief="In May 2021, a single compromised password brought America's largest fuel pipeline to a standstill. Gas stations ran dry, prices surged, and even the President declared a state of emergency. In this episode we dig into the Colonial Pipeline ransomware attack, how Russia-based cybercriminal group DarkSide pulled it off, the $4.4 million ransom paid in Bitcoin, and how the FBI tracked and seized most of it back. You'll hear from Colonial's CEO, Joseph Blount, and FBI Deputy Director Paul Abbate as we break down the technical and human side of the breach in plain language — for anyone, not just tech insiders.">
+          <span class="ep__thumb"><img class="ep__art" src="art/logo-cameras.jpg" width="1000" height="1000" alt="DarkSide in the Pipeline episode cover"><span class="ep__reticle" aria-hidden="true"></span></span>
           <span class="ep__num">EP 1</span>
           <span class="ep__main">
-            <span class="ep__title">Welcome to Within The Logs</span>
-            <span class="ep__brief">Where it begins — what this show is, who's behind it, and the one rule we never break.</span>
+            <span class="ep__title">DarkSide in the Pipeline</span>
+            <span class="ep__brief">In May 2021, one leaked password froze America's largest fuel pipeline. Inside the Colonial Pipeline attack, DarkSide's $4.4M Bitcoin ransom, and how the FBI clawed most of it back.</span>
             <span class="ep__wave" aria-hidden="true"></span>
           </span>
           <span class="ep__chip">CASE FILE</span>
-          <span class="ep__go">Listen</span>
+          <span class="ep__go">Open file</span>
         </a>
       </div>
     </div>
@@ -683,6 +664,12 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
         <h3 class="case__title" id="case-title"></h3>
         <div class="case__meta" id="case-meta"></div>
         <p class="case__brief" id="case-brief"></p>
+        <div class="case__actions">
+          <button class="btn btn--primary" id="case-play" type="button">
+            <svg aria-hidden="true" width="14" height="16" viewBox="0 0 14 16"><path d="M1 1.5v13l12-6.5z" fill="currentColor"></path></svg>
+            Play episode
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -938,10 +925,11 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
     var bs = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
     if (!bs.length) return;
     function run(b) {
-      var target = parseInt(b.getAttribute('data-count'), 10) || 0, suf = b.getAttribute('data-suffix') || '';
-      if (reduce) { b.textContent = target.toLocaleString() + suf; return; }
+      var target = parseInt(b.getAttribute('data-count'), 10) || 0, suf = b.getAttribute('data-suffix') || '', pre = b.getAttribute('data-prefix') || '', nogroup = b.getAttribute('data-nogroup') !== null;
+      function fmt(n) { return pre + (nogroup ? String(n) : n.toLocaleString()) + suf; }
+      if (reduce) { b.textContent = fmt(target); return; }
       var t0 = null, dur = 1100;
-      function step(ts) { if (!t0) t0 = ts; var k = Math.min((ts - t0) / dur, 1); b.textContent = Math.round(target * (1 - Math.pow(1 - k, 3))).toLocaleString() + suf; if (k < 1) requestAnimationFrame(step); }
+      function step(ts) { if (!t0) t0 = ts; var k = Math.min((ts - t0) / dur, 1); b.textContent = fmt(Math.round(target * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); }
       requestAnimationFrame(step);
     }
     if (!('IntersectionObserver' in window)) { bs.forEach(run); return; }
@@ -1157,7 +1145,18 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
     var meta = document.getElementById('case-meta');
     var brief = document.getElementById('case-brief');
     var closeBtn = document.getElementById('case-close');
+    var playBtn = document.getElementById('case-play');
+    var heroAudio = document.getElementById('player-audio');
+    var epAudio = document.getElementById('episode-audio');
     var lastFocus = null, savedY = 0;
+    var PLAY_ICON = '<svg aria-hidden="true" width="14" height="16" viewBox="0 0 14 16"><path d="M1 1.5v13l12-6.5z" fill="currentColor"></path></svg> Play episode';
+    var PAUSE_ICON = '<svg aria-hidden="true" width="14" height="16" viewBox="0 0 14 16"><path d="M2 1.5h3.5v13H2zM8.5 1.5H12v13H8.5z" fill="currentColor"></path></svg> Pause episode';
+    function syncPlay() { if (playBtn) playBtn.innerHTML = (epAudio && !epAudio.paused) ? PAUSE_ICON : PLAY_ICON; }
+    if (epAudio && playBtn) {
+      playBtn.addEventListener('click', function () { if (epAudio.paused) { if (heroAudio) heroAudio.pause(); epAudio.play(); } else { epAudio.pause(); } });
+      epAudio.addEventListener('play', syncPlay);
+      epAudio.addEventListener('pause', syncPlay);
+    }
 
     function buildBrief(text) {
       brief.textContent = '';
@@ -1179,6 +1178,8 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
       title.textContent = ep.querySelector('.ep__title').textContent;
       meta.textContent = ep.querySelector('.ep__num').textContent + '  ·  STATUS: OPEN  ·  SOURCES: VERIFIED';
       buildBrief(ep.getAttribute('data-brief') || '');
+      if (epAudio) { var au = ep.getAttribute('data-audio') || ''; if (au && epAudio.getAttribute('src') !== au) { epAudio.pause(); epAudio.setAttribute('src', au); } }
+      syncPlay();
       savedY = window.scrollY || 0;
       document.body.style.position = 'fixed'; document.body.style.top = (-savedY) + 'px';
       document.body.style.left = '0'; document.body.style.right = '0'; document.body.style.width = '100%';
@@ -1186,6 +1187,7 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
       lastFocus = document.activeElement; closeBtn.focus(); blip(520,0.09,0.22);
     }
     function close() {
+      if (epAudio && !epAudio.paused) { epAudio.pause(); }
       modal.classList.remove('on'); modal.setAttribute('aria-hidden','true');
       document.body.style.position = ''; document.body.style.top = ''; document.body.style.left = ''; document.body.style.right = ''; document.body.style.width = '';
       window.scrollTo(0, savedY);
