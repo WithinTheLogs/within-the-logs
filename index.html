@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Within The Logs - Uncovering the stories behind the breaches.</title>
 <meta name="description" content="A storytelling podcast about the hidden side of the internet — true cybercrime, espionage, and the digital traces left by hackers, insiders, and covert operations.">
 <link rel="icon" href="art/favicon-16.png" sizes="16x16">
@@ -489,6 +490,39 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
 .socials a:hover { background: var(--cyan); transform: translateY(-2px); }
 .socials svg { width: 19px; height: 19px; fill: currentColor; display: block; }
 .foot__legal { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 760px) {
+  .top .wrap { gap: 10px 14px; padding-block: 12px; }
+  .brand { font-size: 15px; gap: 10px; }
+  .brand__logo { width: 36px; height: 36px; }
+  /* nav becomes a single tidy scrollable row on its own line */
+  .nav { order: 3; width: 100%; flex-wrap: nowrap; overflow-x: auto; gap: 0 20px; font-size: 14px;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { padding-block: 8px; white-space: nowrap; }
+  .search { order: 2; }
+  .search input { width: clamp(120px, 42vw, 200px); }
+
+  .hero { padding-block: 32px; gap: 26px; }
+  .hero__copy { gap: 18px; flex-basis: 100%; }
+  .hero__frame { flex-basis: 100%; max-width: 100%; }
+  .hero h1 { font-size: clamp(34px, 11vw, 56px); }
+
+  .head { margin-bottom: 14px; }
+  .ep { gap: 8px 16px; padding-block: 18px; }
+  .ep__num { width: auto; }
+  .ep__player { gap: 10px; width: 100%; }
+  .ep__wave { flex-basis: 140px; }
+  .ep__chip { display: none; }
+
+  .foot .wrap { gap: 14px 24px; }
+}
+@media (max-width: 420px) {
+  .hero h1 { font-size: clamp(30px, 12vw, 44px); }
+  .ep__thumb { align-self: flex-start; }
+  .ep__num { display: none; }
+}
 </style>
 
 <div class="boot" id="boot" role="status" aria-label="Loading">
