@@ -341,8 +341,8 @@ a:hover { color: var(--amber); }
 .ep__thumb { position: relative; align-self: flex-start; }
 .ep__reticle { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
 .ep__reticle::before, .ep__reticle::after { content: ""; position: absolute; width: 14px; height: 14px; }
-.ep__reticle::before { top: 4px; left: 4px; border-top: 2px solid var(--red); border-left: 2px solid var(--red); }
-.ep__reticle::after { bottom: 4px; right: 4px; border-bottom: 2px solid var(--red); border-right: 2px solid var(--red); }
+.ep__reticle::before { top: 4px; left: 4px; border-top: 2px solid var(--amber); border-left: 2px solid var(--amber); }
+.ep__reticle::after { bottom: 4px; right: 4px; border-bottom: 2px solid var(--amber); border-right: 2px solid var(--amber); }
 .ep:hover .ep__reticle, .ep:focus-within .ep__reticle { opacity: 1; }
 .ep__main { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
 .ep__brief { color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 60ch; }
@@ -401,8 +401,8 @@ a:hover { color: var(--amber); }
 .hero__frame { position: relative; display: block; flex: 1 1 300px; min-width: 0; max-width: min(440px, 100%); aspect-ratio: 1 / 1; overflow: hidden; }
 .hero__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hero__frame::before, .hero__frame::after { content: ""; position: absolute; width: 26px; height: 26px; z-index: 2; pointer-events: none; }
-.hero__frame::before { top: 8px; left: 8px; border-top: 2px solid var(--red); border-left: 2px solid var(--red); }
-.hero__frame::after { bottom: 8px; right: 8px; border-bottom: 2px solid var(--red); border-right: 2px solid var(--red); }
+.hero__frame::before { top: 8px; left: 8px; border-top: 2px solid var(--amber); border-left: 2px solid var(--amber); }
+.hero__frame::after { bottom: 8px; right: 8px; border-bottom: 2px solid var(--amber); border-right: 2px solid var(--amber); }
 @media (prefers-reduced-motion: no-preference) {
   .hero__frame img { transition: transform 0.5s ease, filter 0.5s ease; }
   .hero__frame:hover img { transform: scale(1.05); filter: contrast(1.08); }
@@ -759,6 +759,11 @@ html.anim .hero__frame.drawn::before, html.anim .hero__frame.drawn::after { widt
   (function boot() {
     var el = document.getElementById('boot');
     if (!el) return;
+    // Show the boot sequence only once per browser session.
+    var seen = false;
+    try { seen = sessionStorage.getItem('wtl_booted') === '1'; } catch (e) {}
+    if (seen) { if (el.parentNode) el.parentNode.removeChild(el); return; }
+    try { sessionStorage.setItem('wtl_booted', '1'); } catch (e) {}
     var log = document.getElementById('boot-log');
     var skip = document.getElementById('boot-skip');
     function finish() {
