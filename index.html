@@ -32,7 +32,7 @@
   --signal: #BDBDBD;
   --amber: #FFFFFF;
   --cyan: #FFFFFF;
-  --red: #E5484D;
+  --red: #FF3B3B;
   --display: Archivo, "IBM Plex Sans", "Helvetica Neue", sans-serif;
   --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -341,8 +341,8 @@ a:hover { color: var(--amber); }
 .ep__thumb { position: relative; align-self: flex-start; }
 .ep__reticle { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
 .ep__reticle::before, .ep__reticle::after { content: ""; position: absolute; width: 14px; height: 14px; }
-.ep__reticle::before { top: 4px; left: 4px; border-top: 2px solid var(--amber); border-left: 2px solid var(--amber); }
-.ep__reticle::after { bottom: 4px; right: 4px; border-bottom: 2px solid var(--amber); border-right: 2px solid var(--amber); }
+.ep__reticle::before { top: 4px; left: 4px; border-top: 2px solid var(--red); border-left: 2px solid var(--red); }
+.ep__reticle::after { bottom: 4px; right: 4px; border-bottom: 2px solid var(--red); border-right: 2px solid var(--red); }
 .ep:hover .ep__reticle, .ep:focus-within .ep__reticle { opacity: 1; }
 .ep__main { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
 .ep__brief { color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 60ch; }
